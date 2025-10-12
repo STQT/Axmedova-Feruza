@@ -310,6 +310,27 @@ touch tmp/restart.txt
 
 ## 🐛 Устранение неполадок
 
+### Passenger Error #2 - Permission Denied
+**Ошибка**: `Permission denied (errno=13)` при доступе к `Passengerfile.json`
+
+**Решение**:
+1. Загрузите файл `Passengerfile.json` в корень сайта
+2. Установите права доступа:
+   ```bash
+   # В Terminal cPanel
+   cd /home/axmedova/website
+   chmod 644 Passengerfile.json
+   chown axmedova:nobody Passengerfile.json
+   ```
+3. Или запустите готовый скрипт:
+   ```bash
+   bash fix_permissions.sh
+   ```
+4. Перезапустите Passenger:
+   ```bash
+   touch .restart.txt
+   ```
+
 ### Ошибка 500 Internal Server Error
 
 1. Проверьте логи ошибок:

@@ -2,16 +2,22 @@
 
 # Enable Passenger
 PassengerEnabled On
-PassengerAppRoot /home/username/public_html/axmedova
+PassengerAppRoot /home/axmedova/website
 
 # Set Python interpreter path (update with your actual path)
-PassengerPython /home/username/public_html/axmedova/venv/bin/python
+PassengerPython /usr/local/bin/python3
 
 # Set startup file
 PassengerStartupFile passenger_wsgi.py
 
 # Set application environment
 PassengerAppEnv production
+
+# Установка прав доступа для Passenger
+<IfModule mod_passenger.c>
+    PassengerUser axmedova
+    PassengerGroup nobody
+</IfModule>
 
 # Error handling
 ErrorDocument 500 "Internal Server Error - Please contact the site administrator"
@@ -27,11 +33,11 @@ ErrorDocument 500 "Internal Server Error - Please contact the site administrator
     
     # Serve static files
     RewriteCond %{REQUEST_URI} ^/static/
-    RewriteRule ^static/(.*)$ /home/username/public_html/axmedova/staticfiles/$1 [L]
+    RewriteRule ^static/(.*)$ /home/axmedova/website/staticfiles/$1 [L]
     
     # Serve media files
     RewriteCond %{REQUEST_URI} ^/media/
-    RewriteRule ^media/(.*)$ /home/username/public_html/axmedova/media/$1 [L]
+    RewriteRule ^media/(.*)$ /home/axmedova/website/media/$1 [L]
 </IfModule>
 
 # Browser caching for static files
