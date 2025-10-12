@@ -25,13 +25,15 @@ ErrorDocument 500 "Internal Server Error - Please contact the site administrator
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # Serve media files FIRST (before static)
+    RewriteCond %{REQUEST_URI} ^/media/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^media/(.*)$ /home/axmedova/website/media/$1 [L]
+
     # Serve static files
     RewriteCond %{REQUEST_URI} ^/static/
+    RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^static/(.*)$ /home/axmedova/website/staticfiles/$1 [L]
-
-    # Serve media files
-    RewriteCond %{REQUEST_URI} ^/media/
-    RewriteRule ^media/(.*)$ /home/axmedova/website/media/$1 [L]
     
     # Fallback to Django for all other requests
     RewriteCond %{REQUEST_FILENAME} !-f
