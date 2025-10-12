@@ -2,7 +2,7 @@ import os
 import sys
 
 # ЗАМЕНИТЕ username НА ВАШЕ ИМЯ ПОЛЬЗОВАТЕЛЯ
-INTERP = os.path.expanduser("~/virtualenv/website/3.12/bin/python")
+INTERP = os.path.expanduser("~/virtualenv/website/3.12/bin/python3.12_bin")
 if sys.executable != INTERP:
     os.execl(INTERP, INTERP, *sys.argv)
 
