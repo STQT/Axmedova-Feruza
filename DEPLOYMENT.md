@@ -99,6 +99,9 @@ SECRET_KEY=your-very-secret-and-long-random-key-here
 DEBUG=False
 ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
 
+# CSRF Trusted Origins (for HTTPS in production)
+CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+
 # Database Settings (для PostgreSQL)
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=axmedova_db
@@ -339,12 +342,28 @@ touch tmp/restart.txt
 
 2. Проверьте права на файлы и директории
 
-3. Убедитесь, что `DEBUG=False` и `ALLOWED_HOSTS` настроены правильно
+3. Убедитесь, что `DEBUG=False`, `ALLOWED_HOSTS` и `CSRF_TRUSTED_ORIGINS` настроены правильно
 
 ### Статические файлы не загружаются
 
 1. Проверьте пути в `.htaccess`
 2. Убедитесь, что `collectstatic` был выполнен
+
+### CSRF ошибки (403 Forbidden)
+
+Если получаете ошибки CSRF при отправке форм:
+
+1. **Проверьте CSRF_TRUSTED_ORIGINS** в `.env` файле:
+   ```env
+   CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+   ```
+
+2. **Убедитесь, что домены точно совпадают** (с https:// и без слеша в конце)
+
+3. **Перезапустите приложение** после изменения `.env`:
+   ```bash
+   touch .restart.txt
+   ```
 3. Проверьте права доступа к директории `staticfiles`
 
 ### База данных не подключается
