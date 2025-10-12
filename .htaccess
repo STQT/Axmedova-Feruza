@@ -5,19 +5,13 @@ PassengerEnabled On
 PassengerAppRoot /home/axmedova/website
 
 # Set Python interpreter path (update with your actual path)
-PassengerPython /usr/local/bin/python3
+PassengerPython /home/axmedova/virtualenv/website/3.12/bin/python
 
 # Set startup file
 PassengerStartupFile passenger_wsgi.py
 
 # Set application environment
 PassengerAppEnv production
-
-# Установка прав доступа для Passenger
-<IfModule mod_passenger.c>
-    PassengerUser axmedova
-    PassengerGroup nobody
-</IfModule>
 
 # Error handling
 ErrorDocument 500 "Internal Server Error - Please contact the site administrator"
@@ -30,11 +24,11 @@ ErrorDocument 500 "Internal Server Error - Please contact the site administrator
 # Serve static files directly
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    
+
     # Serve static files
     RewriteCond %{REQUEST_URI} ^/static/
     RewriteRule ^static/(.*)$ /home/axmedova/website/staticfiles/$1 [L]
-    
+
     # Serve media files
     RewriteCond %{REQUEST_URI} ^/media/
     RewriteRule ^media/(.*)$ /home/axmedova/website/media/$1 [L]
@@ -57,4 +51,3 @@ ErrorDocument 500 "Internal Server Error - Please contact the site administrator
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/x-javascript
 </IfModule>
-
