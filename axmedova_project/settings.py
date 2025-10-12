@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     # Third party apps
     'crispy_forms',
     'crispy_bootstrap5',
+    'ckeditor',
+    'ckeditor_uploader',
     
     # Local apps
     'core',
@@ -118,6 +120,42 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# CKEditor Configuration
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline', 'Strike'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source'],
+            ['Format', 'Font', 'FontSize'],
+            ['TextColor', 'BGColor'],
+            ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],
+            ['Blockquote', 'CodeSnippet'],
+        ],
+        'height': 400,
+        'width': '100%',
+        'extraPlugins': ','.join([
+            'codesnippet',
+        ]),
+    },
+    'simple': {
+        'toolbar': 'Basic',
+        'toolbar_Basic': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList'],
+            ['Link', 'Unlink'],
+        ],
+        'height': 200,
+        'width': '100%',
+    },
+}
 
 # Whitenoise configuration
 # Use simple storage for tests, compressed manifest for production

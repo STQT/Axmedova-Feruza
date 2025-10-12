@@ -61,6 +61,9 @@
                         <a class="nav-link {% if request.resolver_match.url_name == 'publications' %}active{% endif %}" href="{% url 'publications' %}">Публикации</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'books' or request.resolver_match.url_name == 'book_detail' %}active{% endif %}" href="{% url 'books' %}">Книги</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'blog' %}active{% endif %}" href="{% url 'blog' %}">Блог</a>
                     </li>
                     <li class="nav-item">
@@ -106,7 +109,10 @@
                     <ul class="list-unstyled">
                         <li><a href="{% url 'about' %}" class="text-muted text-decoration-none">О социологе</a></li>
                         <li><a href="{% url 'services' %}" class="text-muted text-decoration-none">Услуги</a></li>
+                        <li><a href="{% url 'portfolio' %}" class="text-muted text-decoration-none">Портфолио</a></li>
                         <li><a href="{% url 'publications' %}" class="text-muted text-decoration-none">Публикации</a></li>
+                        <li><a href="{% url 'books' %}" class="text-muted text-decoration-none">Книги</a></li>
+                        <li><a href="{% url 'blog' %}" class="text-muted text-decoration-none">Блог</a></li>
                         <li><a href="{% url 'contact' %}" class="text-muted text-decoration-none">Контакты</a></li>
                     </ul>
                 </div>

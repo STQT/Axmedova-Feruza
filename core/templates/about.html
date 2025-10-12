@@ -28,9 +28,9 @@
         <div class="row align-items-center mb-5">
             <div class="col-lg-4 mb-4 mb-lg-0">
                 {% if profile.photo %}
-                <img src="{{ profile.photo.url }}" alt="{{ profile.full_name }}" class="img-fluid rounded shadow">
+                <img src="{{ profile.photo.url }}" alt="{{ profile.full_name }}" class="profile-image">
                 {% else %}
-                <img src="{% static 'images/profile-placeholder.jpg' %}" alt="Profile" class="img-fluid rounded shadow">
+                <img src="{% static 'images/profile-placeholder.svg' %}" alt="Profile" class="profile-image">
                 {% endif %}
             </div>
             <div class="col-lg-8">

@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
     Profile, Service, Publication, Project, BlogPost,
-    ServiceOrder, Achievement, Testimonial, ContactMessage
+    ServiceOrder, Achievement, Testimonial, ContactMessage,
+    Book, BookOrder
 )
 
 
@@ -79,26 +80,33 @@ class ProjectAdmin(admin.ModelAdmin):
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'is_published', 'views_count', 'published_at', 'created_at']
+    list_display = ['title', 'category', 'is_published', 'views_count', 'published_at']
     list_filter = ['is_published', 'category', 'created_at']
-    search_fields = ['title', 'content', 'excerpt', 'tags']
+    search_fields = ['title', 'excerpt', 'tags']
     prepopulated_fields = {'slug': ('title',)}
     list_editable = ['is_published']
     date_hierarchy = 'published_at'
     ordering = ['-published_at', '-created_at']
     
     fieldsets = (
-        ('Основная информация', {
-            'fields': ('title', 'slug', 'category', 'tags')
+        (None, {
+            'fields': ('title', 'slug', 'category', 'tags', 'featured_image')
         }),
         ('Содержание', {
-            'fields': ('excerpt', 'content', 'featured_image')
+            'fields': ('excerpt', 'content'),
+            'description': 'Используйте редактор для форматирования текста'
         }),
-        ('Публикация', {
-            'fields': ('is_published', 'published_at', 'views_count')
+        ('Настройки публикации', {
+            'fields': ('is_published', 'published_at', 'views_count'),
+            'classes': ('collapse',)
         }),
     )
     readonly_fields = ['views_count']
+    
+    class Media:
+        css = {
+            'all': ('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css',)
+        }
 
 
 @admin.register(ServiceOrder)
@@ -180,4 +188,80 @@ class ContactMessageAdmin(admin.ModelAdmin):
             'fields': ('is_read', 'created_at')
         }),
     )
+
+
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    list_display = ['title', 'author', 'publication_year', 'price', 'is_available', 'is_featured', 'views_count']
+    list_filter = ['is_available', 'is_featured', 'publication_year', 'language']
+    search_fields = ['title', 'author', 'description', 'isbn']
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ['is_available', 'is_featured', 'price']
+    ordering = ['-is_featured', 'order', '-publication_year']
+    readonly_fields = ['views_count', 'created_at', 'updated_at']
+    
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'slug', 'author', 'cover_image', 'pdf_file')
+        }),
+        ('Описание', {
+            'fields': ('short_description', 'description'),
+        }),
+        ('Издательская информация', {
+            'fields': ('publisher', 'publication_year', 'isbn', 'pages', 'language'),
+        }),
+        ('Цена и доступность', {
+            'fields': ('price', 'is_available'),
+        }),
+        ('Настройки отображения', {
+            'fields': ('is_featured', 'order', 'views_count'),
+            'classes': ('collapse',)
+        }),
+        ('Даты', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs
+
+
+@admin.register(BookOrder)
+class BookOrderAdmin(admin.ModelAdmin):
+    list_display = ['book', 'full_name', 'email', 'phone', 'quantity', 'status', 'created_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['book__title', 'full_name', 'email', 'phone', 'address']
+    list_editable = ['status']
+    readonly_fields = ['created_at', 'updated_at', 'get_total_price']
+    ordering = ['-created_at']
+    date_hierarchy = 'created_at'
+    
+    fieldsets = (
+        ('Книга', {
+            'fields': ('book', 'quantity', 'get_total_price')
+        }),
+        ('Информация о клиенте', {
+            'fields': ('full_name', 'email', 'phone', 'address')
+        }),
+        ('Запрос', {
+            'fields': ('message',)
+        }),
+        ('Административная информация', {
+            'fields': ('status', 'admin_notes', 'created_at', 'updated_at'),
+        }),
+    )
+    
+    def get_total_price(self, obj):
+        """Отображение общей стоимости"""
+        total = obj.get_total_price()
+        if total:
+            return f"{total} ₽"
+        return "Цена не указана"
+    get_total_price.short_description = 'Общая стоимость'
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('book')
 

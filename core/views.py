@@ -2,14 +2,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db import models
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import HttpResponseNotFound, HttpResponseServerError
 from .models import (
     Profile, Service, Publication, Project, BlogPost,
-    Achievement, Testimonial
+    Achievement, Testimonial, Book, BookOrder
 )
-from .forms import ServiceOrderForm, ContactForm
+from .forms import ServiceOrderForm, ContactForm, BookOrderForm
 
 
 def index(request):
@@ -19,6 +20,7 @@ def index(request):
     publications = Publication.objects.filter(is_featured=True)[:3]
     testimonials = Testimonial.objects.filter(is_approved=True)[:3]
     blog_posts = BlogPost.objects.filter(is_published=True)[:3]
+    books = Book.objects.filter(is_featured=True, is_available=True)[:3]
     
     context = {
         'profile': profile,
@@ -26,6 +28,7 @@ def index(request):
         'publications': publications,
         'testimonials': testimonials,
         'blog_posts': blog_posts,
+        'books': books,
     }
     return render(request, 'index.html', context)
 
@@ -252,4 +255,95 @@ def custom_404(request, exception):
 def custom_500(request):
     """Custom 500 error page"""
     return HttpResponseServerError(render(request, '500.html', status=500))
+
+
+def books(request):
+    """Список книг"""
+    books_list = Book.objects.filter(is_available=True)
+    
+    # Фильтрация по году
+    year = request.GET.get('year')
+    if year:
+        books_list = books_list.filter(publication_year=year)
+    
+    # Пагинация
+    paginator = Paginator(books_list, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Получаем уникальные годы для фильтра
+    years = Book.objects.values_list('publication_year', flat=True).distinct().order_by('-publication_year')
+    
+    context = {
+        'page_obj': page_obj,
+        'years': years,
+        'current_year': year,
+    }
+    return render(request, 'books.html', context)
+
+
+def book_detail(request, slug):
+    """Детальная страница книги"""
+    book = get_object_or_404(Book, slug=slug, is_available=True)
+    book.increment_views()
+    
+    # Похожие книги (по автору или году)
+    related_books = Book.objects.filter(
+        is_available=True
+    ).filter(
+        models.Q(author=book.author) | models.Q(publication_year=book.publication_year)
+    ).exclude(pk=book.pk)[:3]
+    
+    context = {
+        'book': book,
+        'related_books': related_books,
+    }
+    return render(request, 'book_detail.html', context)
+
+
+def order_book(request, book_id=None):
+    """Заказ книги"""
+    initial_data = {}
+    if book_id:
+        book = get_object_or_404(Book, pk=book_id, is_available=True)
+        initial_data['book'] = book
+    
+    if request.method == 'POST':
+        form = BookOrderForm(request.POST)
+        if form.is_valid():
+            order = form.save()
+            
+            # Отправка email администратору
+            try:
+                total_price = order.get_total_price()
+                price_info = f"Общая стоимость: {total_price} ₽" if total_price else "Цена не указана"
+                
+                send_mail(
+                    subject=f'Новый заказ книги: {order.book.title}',
+                    message=f'Клиент: {order.full_name}\nEmail: {order.email}\nТелефон: {order.phone}\nАдрес: {order.address}\nКоличество: {order.quantity}\n{price_info}\n\nДополнительно: {order.message}',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.ADMIN_EMAIL],
+                    fail_silently=False,
+                )
+                
+                # Отправка подтверждения клиенту
+                send_mail(
+                    subject='Подтверждение заказа книги',
+                    message=f'Здравствуйте, {order.full_name}!\n\nВаш заказ книги "{order.book.title}" (количество: {order.quantity}) принят. Мы свяжемся с вами в ближайшее время для уточнения деталей доставки.\n\n{price_info}\n\nС уважением,\nАхмедова Феруза Медетовна',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[order.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Email error: {e}")
+            
+            messages.success(request, f'Спасибо! Ваш заказ книги "{order.book.title}" успешно оформлен. Мы свяжемся с вами в ближайшее время.')
+            return redirect('books')
+    else:
+        form = BookOrderForm(initial=initial_data)
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'order_book.html', context)
 

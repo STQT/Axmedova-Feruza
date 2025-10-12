@@ -6,16 +6,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
-from core.sitemaps import StaticViewSitemap, BlogPostSitemap, PublicationSitemap
+from core.sitemaps import StaticViewSitemap, BlogPostSitemap, PublicationSitemap, BookSitemap
 
 sitemaps = {
     'static': StaticViewSitemap,
     'blog': BlogPostSitemap,
     'publications': PublicationSitemap,
+    'books': BookSitemap,
 }
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('', include('core.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]

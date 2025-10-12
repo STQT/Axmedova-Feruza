@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Profile(models.Model):
@@ -130,7 +132,7 @@ class BlogPost(models.Model):
     """Блог/Статьи"""
     title = models.CharField('Заголовок', max_length=500)
     slug = models.SlugField('URL slug', max_length=500, unique=True, blank=True)
-    content = models.TextField('Содержание')
+    content = RichTextUploadingField('Содержание', config_name='default')
     excerpt = models.TextField('Краткое описание', max_length=500, blank=True)
     featured_image = models.ImageField('Изображение', upload_to='blog/', blank=True, null=True)
     category = models.CharField('Категория', max_length=100, blank=True)
@@ -249,4 +251,91 @@ class ContactMessage(models.Model):
     
     def __str__(self):
         return f"{self.name} - {self.subject}"
+
+
+class Book(models.Model):
+    """Книги"""
+    title = models.CharField('Название книги', max_length=500)
+    slug = models.SlugField('URL slug', max_length=500, unique=True, blank=True)
+    author = models.CharField('Автор(ы)', max_length=500, default='Ахмедова Ф.М.')
+    description = RichTextUploadingField('Описание', config_name='default')
+    short_description = models.TextField('Краткое описание', max_length=500, blank=True)
+    cover_image = models.ImageField('Обложка', upload_to='books/covers/')
+    pdf_file = models.FileField('PDF файл', upload_to='books/pdfs/', help_text='PDF файл книги для просмотра')
+    
+    # Издательская информация
+    publisher = models.CharField('Издательство', max_length=255, blank=True)
+    publication_year = models.IntegerField('Год издания')
+    isbn = models.CharField('ISBN', max_length=50, blank=True)
+    pages = models.IntegerField('Количество страниц', blank=True, null=True)
+    language = models.CharField('Язык', max_length=50, default='Русский')
+    
+    # Цена и доступность
+    price = models.DecimalField('Цена', max_digits=10, decimal_places=2, blank=True, null=True, help_text='Цена в рублях')
+    is_available = models.BooleanField('Доступна для заказа', default=True)
+    
+    # Метаданные
+    views_count = models.IntegerField('Просмотры', default=0)
+    is_featured = models.BooleanField('Избранная', default=False, help_text='Показывать на главной странице')
+    order = models.IntegerField('Порядок', default=0)
+    created_at = models.DateTimeField('Создано', auto_now_add=True)
+    updated_at = models.DateTimeField('Обновлено', auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Книга'
+        verbose_name_plural = 'Книги'
+        ordering = ['-is_featured', 'order', '-publication_year']
+    
+    def __str__(self):
+        return f"{self.title} ({self.publication_year})"
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse('book_detail', kwargs={'slug': self.slug})
+    
+    def increment_views(self):
+        """Увеличить счетчик просмотров"""
+        self.views_count += 1
+        self.save(update_fields=['views_count'])
+
+
+class BookOrder(models.Model):
+    """Заказ книги"""
+    STATUS_CHOICES = [
+        ('new', 'Новый'),
+        ('processing', 'В обработке'),
+        ('shipped', 'Отправлен'),
+        ('completed', 'Завершен'),
+        ('cancelled', 'Отменен'),
+    ]
+    
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='Книга')
+    full_name = models.CharField('Имя клиента', max_length=255)
+    email = models.EmailField('Email')
+    phone = models.CharField('Телефон', max_length=50)
+    address = models.TextField('Адрес доставки')
+    quantity = models.IntegerField('Количество', default=1, validators=[MinValueValidator(1)])
+    message = models.TextField('Дополнительные пожелания', blank=True)
+    status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='new')
+    admin_notes = models.TextField('Заметки администратора', blank=True)
+    created_at = models.DateTimeField('Создано', auto_now_add=True)
+    updated_at = models.DateTimeField('Обновлено', auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Заказ книги'
+        verbose_name_plural = 'Заказы книг'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.book.title} - {self.full_name} ({self.get_status_display()})"
+    
+    def get_total_price(self):
+        """Расчет общей стоимости"""
+        if self.book.price:
+            return self.book.price * self.quantity
+        return None
 
