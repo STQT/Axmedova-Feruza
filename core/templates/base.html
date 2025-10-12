@@ -100,47 +100,140 @@
     <footer class="bg-dark text-white py-5 mt-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Ахмедова Феруза Медетовна</h5>
-                    <p class="text-muted">Профессиональный социолог. Научные исследования, публикации, консультации.</p>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="mb-3 text-primary">
+                        <i class="fas fa-user-graduate me-2"></i>Ахмедова Феруза Медетовна
+                    </h5>
+                    <p class="text-light mb-3">
+                        Доктор социологических наук, профессиональный социолог с более чем 20-летним опытом научной и практической деятельности.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-primary">Социология образования</span>
+                        <span class="badge bg-secondary">Методы исследований</span>
+                        <span class="badge bg-success">Социальная структура</span>
+                    </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Навигация</h5>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3 text-primary">
+                        <i class="fas fa-sitemap me-2"></i>Разделы сайта
+                    </h6>
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'about' %}" class="text-muted text-decoration-none">О социологе</a></li>
-                        <li><a href="{% url 'services' %}" class="text-muted text-decoration-none">Услуги</a></li>
-                        <li><a href="{% url 'portfolio' %}" class="text-muted text-decoration-none">Портфолио</a></li>
-                        <li><a href="{% url 'publications' %}" class="text-muted text-decoration-none">Публикации</a></li>
-                        <li><a href="{% url 'books' %}" class="text-muted text-decoration-none">Книги</a></li>
-                        <li><a href="{% url 'blog' %}" class="text-muted text-decoration-none">Блог</a></li>
-                        <li><a href="{% url 'contact' %}" class="text-muted text-decoration-none">Контакты</a></li>
+                        <li class="mb-2"><a href="{% url 'about' %}" class="text-light text-decoration-none">
+                            <i class="fas fa-chevron-right me-1"></i>О социологе</a></li>
+                        <li class="mb-2"><a href="{% url 'services' %}" class="text-light text-decoration-none">
+                            <i class="fas fa-chevron-right me-1"></i>Услуги</a></li>
+                        <li class="mb-2"><a href="{% url 'portfolio' %}" class="text-light text-decoration-none">
+                            <i class="fas fa-chevron-right me-1"></i>Портфолио</a></li>
+                        <li class="mb-2"><a href="{% url 'publications' %}" class="text-light text-decoration-none">
+                            <i class="fas fa-chevron-right me-1"></i>Публикации</a></li>
+                        <li class="mb-2"><a href="{% url 'books' %}" class="text-light text-decoration-none">
+                            <i class="fas fa-chevron-right me-1"></i>Книги</a></li>
+                        <li class="mb-2"><a href="{% url 'blog' %}" class="text-light text-decoration-none">
+                            <i class="fas fa-chevron-right me-1"></i>Блог</a></li>
+                        <li class="mb-2"><a href="{% url 'contact' %}" class="text-light text-decoration-none">
+                            <i class="fas fa-chevron-right me-1"></i>Контакты</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Контакты</h5>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="mb-3 text-primary">
+                        <i class="fas fa-book me-2"></i>Услуги
+                    </h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span class="text-light">Социологические исследования</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span class="text-light">Консультации по методологии</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span class="text-light">Научное редактирование</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span class="text-light">Подготовка публикаций</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="mb-3 text-primary">
+                        <i class="fas fa-phone me-2"></i>Связаться со мной
+                    </h6>
                     {% if profile %}
-                    <p class="text-muted">
-                        <i class="fas fa-envelope me-2"></i>{{ profile.email }}<br>
-                        <i class="fas fa-phone me-2"></i>{{ profile.phone }}
-                    </p>
-                    <div class="social-links">
-                        {% if profile.linkedin %}
-                        <a href="{{ profile.linkedin }}" class="text-white me-3" target="_blank"><i class="fab fa-linkedin fa-2x"></i></a>
-                        {% endif %}
-                        {% if profile.facebook %}
-                        <a href="{{ profile.facebook }}" class="text-white me-3" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
-                        {% endif %}
-                        {% if profile.researchgate %}
-                        <a href="{{ profile.researchgate }}" class="text-white me-3" target="_blank"><i class="fab fa-researchgate fa-2x"></i></a>
-                        {% endif %}
+                    <div class="mb-3">
+                        <p class="text-light mb-2">
+                            <i class="fas fa-envelope text-primary me-2"></i>
+                            <a href="mailto:{{ profile.email }}" class="text-light text-decoration-none">{{ profile.email }}</a>
+                        </p>
+                        <p class="text-light mb-3">
+                            <i class="fas fa-phone text-primary me-2"></i>
+                            <a href="tel:{{ profile.phone }}" class="text-light text-decoration-none">{{ profile.phone }}</a>
+                        </p>
+                    </div>
+                    {% else %}
+                    <div class="mb-3">
+                        <p class="text-light mb-2">
+                            <i class="fas fa-envelope text-primary me-2"></i>
+                            <span class="text-muted">Email будет добавлен</span>
+                        </p>
+                        <p class="text-light mb-3">
+                            <i class="fas fa-phone text-primary me-2"></i>
+                            <span class="text-muted">Телефон будет добавлен</span>
+                        </p>
                     </div>
                     {% endif %}
+                    
+                    <div class="social-links">
+                        <h6 class="text-primary mb-2">
+                            <i class="fas fa-share-alt me-2"></i>Социальные сети
+                        </h6>
+                        {% if profile %}
+                            {% if profile.linkedin %}
+                            <a href="{{ profile.linkedin }}" class="text-white me-2" target="_blank" title="LinkedIn">
+                                <i class="fab fa-linkedin fa-lg"></i>
+                            </a>
+                            {% endif %}
+                            {% if profile.facebook %}
+                            <a href="{{ profile.facebook }}" class="text-white me-2" target="_blank" title="Facebook">
+                                <i class="fab fa-facebook fa-lg"></i>
+                            </a>
+                            {% endif %}
+                            {% if profile.researchgate %}
+                            <a href="{{ profile.researchgate }}" class="text-white me-2" target="_blank" title="ResearchGate">
+                                <i class="fab fa-researchgate fa-lg"></i>
+                            </a>
+                            {% endif %}
+                        {% else %}
+                        <span class="text-muted small">Социальные сети будут добавлены</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-            <hr class="bg-secondary">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <p class="mb-0 text-muted">&copy; {% now "Y" %} Ахмедова Феруза Медетовна. Все права защищены.</p>
+            
+            <hr class="bg-secondary my-4">
+            
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-0 text-muted">
+                        <i class="fas fa-copyright me-1"></i>
+                        {% now "Y" %} Ахмедова Феруза Медетовна. Все права защищены.
+                        <span class="ms-3">
+                            <i class="fas fa-graduation-cap me-1"></i>Доктор социологических наук
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <p class="mb-0 text-muted small">
+                        <i class="fas fa-code me-1"></i>Сайт разработан на Django
+                        <span class="ms-2">
+                            <i class="fas fa-heart text-danger me-1"></i>С любовью к науке
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
