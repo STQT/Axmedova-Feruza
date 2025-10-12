@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Услуги - Ахмедова Феруза Медетовна{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-4 fw-bold">Услуги социолога</h1>
+                <p class="lead text-muted">Профессиональные социологические услуги для вашего бизнеса и исследований</p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Услуги</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section py-5">
+    <div class="container">
+        {% if services %}
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center">
+                        <div class="service-icon mb-4">
+                            <i class="{{ service.icon }} fa-4x text-primary"></i>
+                        </div>
+                        <h4 class="card-title fw-bold mb-3">{{ service.title }}</h4>
+                        <p class="card-text text-muted mb-4">{{ service.description }}</p>
+                        
+                        {% if service.duration %}
+                        <p class="mb-2">
+                            <i class="fas fa-clock text-primary"></i>
+                            <strong>Длительность:</strong> {{ service.duration }}
+                        </p>
+                        {% endif %}
+                        
+                        {% if service.price_from %}
+                        <div class="price mb-4">
+                            <h3 class="text-primary mb-0">От {{ service.price_from }} ₽</h3>
+                        </div>
+                        {% endif %}
+                        
+                        <a href="{% url 'order_service_direct' service.id %}" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-paper-plane"></i> Заказать услугу
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle fa-3x mb-3"></i>
+            <h4>Информация об услугах скоро появится</h4>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Why Choose Section -->
+<section class="why-choose-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Почему выбирают меня</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <div class="feature-box p-4">
+                    <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Экспертиза</h5>
+                    <p class="text-muted">Научная степень и многолетний опыт</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-box p-4">
+                    <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Результативность</h5>
+                    <p class="text-muted">Доказанные результаты исследований</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-box p-4">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Индивидуальный подход</h5>
+                    <p class="text-muted">Решения под ваши задачи</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-box p-4">
+                    <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Соблюдение сроков</h5>
+                    <p class="text-muted">Работа выполняется вовремя</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="card bg-primary text-white shadow-lg">
+            <div class="card-body text-center py-5">
+                <h2 class="fw-bold mb-3">Готовы начать проект?</h2>
+                <p class="lead mb-4">Свяжитесь со мной для получения консультации и обсуждения деталей</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{% url 'order_service' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-paper-plane"></i> Заказать услугу
+                    </a>
+                    <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-envelope"></i> Написать
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

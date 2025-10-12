@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Заказать услугу - Ахмедова Феруза Медетовна{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-4 fw-bold">Заказать услугу</h1>
+                <p class="lead text-muted">Заполните форму ниже, и я свяжусь с вами в ближайшее время</p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'services' %}">Услуги</a></li>
+                        <li class="breadcrumb-item active">Заказать</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Order Form Section -->
+<section class="order-form-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-file-alt fa-4x text-primary mb-3"></i>
+                            <h3 class="fw-bold">Форма заказа услуги</h3>
+                            <p class="text-muted">Пожалуйста, заполните все обязательные поля</p>
+                        </div>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Info Box -->
+                <div class="alert alert-info mt-4">
+                    <h5 class="alert-heading"><i class="fas fa-info-circle"></i> Информация</h5>
+                    <ul class="mb-0">
+                        <li>После отправки заявки вы получите подтверждение на указанный email</li>
+                        <li>Я свяжусь с вами в течение 1-2 рабочих дней</li>
+                        <li>Все данные конфиденциальны и не передаются третьим лицам</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Section -->
+<section class="why-choose-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Преимущества работы со мной</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <div class="feature-box p-4">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Конфиденциальность</h5>
+                    <p class="text-muted">Гарантия полной конфиденциальности</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-box p-4">
+                    <i class="fas fa-certificate fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Качество</h5>
+                    <p class="text-muted">Профессиональный подход к работе</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-box p-4">
+                    <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Сроки</h5>
+                    <p class="text-muted">Выполнение работы точно в срок</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-box p-4">
+                    <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Поддержка</h5>
+                    <p class="text-muted">Консультации на всех этапах</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Alternative Contact -->
+<section class="alternative-contact-section py-5">
+    <div class="container">
+        <div class="card bg-primary text-white shadow-lg">
+            <div class="card-body text-center py-5">
+                <h2 class="fw-bold mb-3">Предпочитаете личный контакт?</h2>
+                <p class="lead mb-4">Вы можете связаться со мной напрямую</p>
+                <a href="{% url 'contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope"></i> Перейти к контактам
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

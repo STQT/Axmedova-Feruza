@@ -1,0 +1,255 @@
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.http import HttpResponseNotFound, HttpResponseServerError
+from .models import (
+    Profile, Service, Publication, Project, BlogPost,
+    Achievement, Testimonial
+)
+from .forms import ServiceOrderForm, ContactForm
+
+
+def index(request):
+    """Главная страница"""
+    profile = Profile.objects.first()
+    services = Service.objects.filter(is_active=True)[:6]
+    publications = Publication.objects.filter(is_featured=True)[:3]
+    testimonials = Testimonial.objects.filter(is_approved=True)[:3]
+    blog_posts = BlogPost.objects.filter(is_published=True)[:3]
+    
+    context = {
+        'profile': profile,
+        'services': services,
+        'publications': publications,
+        'testimonials': testimonials,
+        'blog_posts': blog_posts,
+    }
+    return render(request, 'index.html', context)
+
+
+def about(request):
+    """О социологе"""
+    profile = Profile.objects.first()
+    achievements = Achievement.objects.all()[:10]
+    
+    context = {
+        'profile': profile,
+        'achievements': achievements,
+    }
+    return render(request, 'about.html', context)
+
+
+def services(request):
+    """Услуги"""
+    services_list = Service.objects.filter(is_active=True)
+    
+    context = {
+        'services': services_list,
+    }
+    return render(request, 'services.html', context)
+
+
+def portfolio(request):
+    """Портфолио - проекты"""
+    projects_list = Project.objects.filter(is_active=True)
+    
+    # Фильтрация
+    status = request.GET.get('status')
+    if status == 'ongoing':
+        projects_list = projects_list.filter(end_date__isnull=True)
+    elif status == 'completed':
+        projects_list = projects_list.filter(end_date__isnull=False)
+    
+    context = {
+        'projects': projects_list,
+    }
+    return render(request, 'portfolio.html', context)
+
+
+def publications(request):
+    """Публикации"""
+    publications_list = Publication.objects.all()
+    
+    # Фильтрация
+    pub_type = request.GET.get('type')
+    if pub_type:
+        publications_list = publications_list.filter(publication_type=pub_type)
+    
+    year = request.GET.get('year')
+    if year:
+        publications_list = publications_list.filter(year=year)
+    
+    # Поиск
+    search = request.GET.get('search')
+    if search:
+        publications_list = publications_list.filter(
+            Q(title__icontains=search) |
+            Q(authors__icontains=search) |
+            Q(keywords__icontains=search)
+        )
+    
+    # Пагинация
+    paginator = Paginator(publications_list, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Получаем уникальные годы для фильтра
+    years = Publication.objects.values_list('year', flat=True).distinct().order_by('-year')
+    
+    context = {
+        'page_obj': page_obj,
+        'years': years,
+        'current_type': pub_type,
+        'current_year': year,
+        'search_query': search,
+    }
+    return render(request, 'publications.html', context)
+
+
+def publication_detail(request, pk):
+    """Детальная страница публикации"""
+    publication = get_object_or_404(Publication, pk=pk)
+    
+    context = {
+        'publication': publication,
+    }
+    return render(request, 'publication_detail.html', context)
+
+
+def blog(request):
+    """Блог"""
+    posts_list = BlogPost.objects.filter(is_published=True)
+    
+    # Фильтрация по категории
+    category = request.GET.get('category')
+    if category:
+        posts_list = posts_list.filter(category=category)
+    
+    # Фильтрация по тегу
+    tag = request.GET.get('tag')
+    if tag:
+        posts_list = posts_list.filter(tags__icontains=tag)
+    
+    # Пагинация
+    paginator = Paginator(posts_list, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Получаем уникальные категории
+    categories = BlogPost.objects.filter(is_published=True).values_list('category', flat=True).distinct()
+    
+    context = {
+        'page_obj': page_obj,
+        'categories': categories,
+        'current_category': category,
+    }
+    return render(request, 'blog.html', context)
+
+
+def blog_detail(request, slug):
+    """Детальная страница статьи блога"""
+    post = get_object_or_404(BlogPost, slug=slug, is_published=True)
+    post.increment_views()
+    
+    # Похожие статьи
+    related_posts = BlogPost.objects.filter(
+        is_published=True,
+        category=post.category
+    ).exclude(pk=post.pk)[:3]
+    
+    context = {
+        'post': post,
+        'related_posts': related_posts,
+    }
+    return render(request, 'blog_detail.html', context)
+
+
+def contact(request):
+    """Контакты"""
+    profile = Profile.objects.first()
+    
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            contact_message = form.save()
+            
+            # Отправка email администратору
+            try:
+                send_mail(
+                    subject=f'Новое сообщение: {contact_message.subject}',
+                    message=f'От: {contact_message.name} ({contact_message.email})\n\n{contact_message.message}',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.ADMIN_EMAIL],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Email error: {e}")
+            
+            messages.success(request, 'Спасибо! Ваше сообщение успешно отправлено.')
+            return redirect('contact')
+    else:
+        form = ContactForm()
+    
+    context = {
+        'profile': profile,
+        'form': form,
+    }
+    return render(request, 'contact.html', context)
+
+
+def order_service(request, service_id=None):
+    """Заказ услуги"""
+    initial_data = {}
+    if service_id:
+        service = get_object_or_404(Service, pk=service_id, is_active=True)
+        initial_data['service'] = service
+    
+    if request.method == 'POST':
+        form = ServiceOrderForm(request.POST)
+        if form.is_valid():
+            order = form.save()
+            
+            # Отправка email администратору
+            try:
+                send_mail(
+                    subject=f'Новый заказ услуги: {order.service.title}',
+                    message=f'Клиент: {order.full_name}\nEmail: {order.email}\nТелефон: {order.phone}\n\nОписание: {order.message}',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.ADMIN_EMAIL],
+                    fail_silently=False,
+                )
+                
+                # Отправка подтверждения клиенту
+                send_mail(
+                    subject='Подтверждение заказа услуги',
+                    message=f'Здравствуйте, {order.full_name}!\n\nВаш заказ услуги "{order.service.title}" принят. Мы свяжемся с вами в ближайшее время.\n\nС уважением,\nАхмедова Феруза Медетовна',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[order.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Email error: {e}")
+            
+            messages.success(request, 'Спасибо! Ваша заявка успешно отправлена. Мы свяжемся с вами в ближайшее время.')
+            return redirect('services')
+    else:
+        form = ServiceOrderForm(initial=initial_data)
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'order_service.html', context)
+
+
+def custom_404(request, exception):
+    """Custom 404 error page"""
+    return HttpResponseNotFound(render(request, '404.html', status=404))
+
+
+def custom_500(request):
+    """Custom 500 error page"""
+    return HttpResponseServerError(render(request, '500.html', status=500))
+
