@@ -1,0 +1,22 @@
+# Simple Django cPanel Passenger Configuration
+
+# Enable Passenger
+PassengerEnabled On
+PassengerAppRoot /home/axmedova/website
+PassengerPython /home/axmedova/virtualenv/website/3.12/bin/python
+PassengerStartupFile passenger_wsgi.py
+PassengerAppEnv production
+
+# Serve media files directly (before Django processing)
+RewriteEngine On
+
+# Media files - serve directly from filesystem
+RewriteRule ^media/(.*)$ /home/axmedova/website/media/$1 [L]
+
+# Static files - serve from collected static files
+RewriteRule ^static/(.*)$ /home/axmedova/website/staticfiles/$1 [L]
+
+# All other requests go to Django
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ passenger_wsgi.py [QSA,L]

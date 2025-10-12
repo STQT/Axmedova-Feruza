@@ -21,7 +21,7 @@ ErrorDocument 500 "Internal Server Error - Please contact the site administrator
 # RewriteCond %{HTTPS} off
 # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Serve static files directly
+# Serve static and media files directly
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -32,6 +32,11 @@ ErrorDocument 500 "Internal Server Error - Please contact the site administrator
     # Serve media files
     RewriteCond %{REQUEST_URI} ^/media/
     RewriteRule ^media/(.*)$ /home/axmedova/website/media/$1 [L]
+    
+    # Fallback to Django for all other requests
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ passenger_wsgi.py [QSA,L]
 </IfModule>
 
 # Browser caching for static files
