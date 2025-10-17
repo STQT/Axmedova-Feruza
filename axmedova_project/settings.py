@@ -117,12 +117,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = config('STATIC_ROOT', default=BASE_DIR / 'staticfiles')
+
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = config('MEDIA_ROOT', default=BASE_DIR / 'media')
+
 
 # CKEditor Configuration
 CKEDITOR_UPLOAD_PATH = "uploads/"
