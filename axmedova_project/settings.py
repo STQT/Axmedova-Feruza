@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'ckeditor',
     'ckeditor_uploader',
+    'storages',
     
     # Local apps
     'core',
@@ -121,9 +122,43 @@ STATIC_ROOT = config('STATIC_ROOT', default=BASE_DIR / 'staticfiles')
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = config('MEDIA_ROOT', default=BASE_DIR / 'media')
+# Media files (local or Cloudflare R2)
+USE_R2_STORAGE = config('USE_R2_STORAGE', default=False, cast=bool)
+
+if USE_R2_STORAGE:
+    # Cloudflare R2 Storage Configuration
+    AWS_ACCESS_KEY_ID = config('R2_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('R2_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = config('R2_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = config('R2_ENDPOINT_URL')
+    AWS_S3_REGION_NAME = config('R2_REGION_NAME', default='auto')
+    
+    # S3 settings
+    AWS_S3_CUSTOM_DOMAIN = config('R2_CUSTOM_DOMAIN', default=None)
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_FILE_OVERWRITE = False
+    
+    # Media files on R2
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/'
+    if AWS_S3_CUSTOM_DOMAIN:
+        MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    
+    # Static files - можно тоже на R2 или локально (whitenoise)
+    USE_R2_FOR_STATIC = config('USE_R2_FOR_STATIC', default=False, cast=bool)
+    if USE_R2_FOR_STATIC:
+        STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+        STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/'
+        if AWS_S3_CUSTOM_DOMAIN:
+            STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+else:
+    # Local storage (default)
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = config('MEDIA_ROOT', default=BASE_DIR / 'media')
 
 
 # CKEditor Configuration

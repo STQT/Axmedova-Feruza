@@ -364,6 +364,18 @@ touch tmp/restart.txt
    ```bash
    touch .restart.txt
    ```
+
+### Медиа файлы возвращают 404
+
+**Решение 1**: Настройте Cloudflare R2 (рекомендуется)
+См. инструкцию в файле `R2_SETUP.txt`
+
+**Решение 2**: Проверьте .htaccess и права:
+```bash
+chmod -R 755 media/
+touch .restart.txt
+```
+
 3. Проверьте права доступа к директории `staticfiles`
 
 ### База данных не подключается
