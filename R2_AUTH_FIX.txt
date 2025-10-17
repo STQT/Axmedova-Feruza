@@ -1,0 +1,117 @@
+═══════════════════════════════════════════════════════════════
+🔧 ИСПРАВЛЕНИЕ: InvalidArgument - Authorization
+═══════════════════════════════════════════════════════════════
+
+ПРОБЛЕМА: Ошибка авторизации при подключении к Cloudflare R2
+РЕШЕНИЕ: Проверка и исправление credentials
+
+═══════════════════════════════════════════════════════════════
+✅ ПРАВИЛЬНАЯ НАСТРОЙКА R2
+═══════════════════════════════════════════════════════════════
+
+1. ПРОВЕРЬТЕ ENDPOINT URL:
+
+   Должен быть в формате:
+   https://ACCOUNT_ID.r2.cloudflarestorage.com
+   
+   НЕ должно быть:
+   https://ACCOUNT_ID.r2.cloudflarestorage.com/BUCKET_NAME
+   
+   ✅ Правильно: https://abc123.r2.cloudflarestorage.com
+   ❌ Неправильно: https://abc123.r2.cloudflarestorage.com/axmedova-media
+
+2. ПРОВЕРЬТЕ API КЛЮЧИ:
+
+   В Cloudflare R2 → Manage R2 API Tokens
+   - Access Key ID: должен быть ~20 символов
+   - Secret Access Key: должен быть ~40 символов
+   
+   СОЗДАЙТЕ НОВЫЙ TOKEN если не уверены:
+   - Create API Token
+   - Permissions: Object Read & Write
+   - Скопируйте оба ключа
+
+3. ПРАВИЛЬНЫЙ .env ФАЙЛ:
+
+# ВАЖНО: Endpoint без bucket name!
+R2_ACCESS_KEY_ID=ваш-access-key-id
+R2_SECRET_ACCESS_KEY=ваш-secret-access-key
+R2_BUCKET_NAME=axmedova-media
+R2_ENDPOINT_URL=https://ваш-account-id.r2.cloudflarestorage.com
+
+# НЕ ДОБАВЛЯЙТЕ bucket name в endpoint!
+
+4. НАСТРОЙТЕ PUBLIC ACCESS В R2 BUCKET:
+
+   - Откройте bucket
+   - Settings → Public Access
+   - Allow Access: YES (включите публичный доступ)
+   
+5. BUCKET POLICY (в R2 bucket settings):
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicRead",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::axmedova-media/*"]
+    }
+  ]
+}
+
+6. ПЕРЕЗАПУСТИТЕ:
+
+touch .restart.txt
+
+═══════════════════════════════════════════════════════════════
+🔍 ПРОВЕРКА НАСТРОЕК
+═══════════════════════════════════════════════════════════════
+
+В Django shell на сервере:
+
+python manage.py shell
+
+>>> from django.conf import settings
+>>> print("Endpoint:", settings.AWS_S3_ENDPOINT_URL)
+>>> print("Bucket:", settings.AWS_STORAGE_BUCKET_NAME)
+>>> print("Access Key:", settings.AWS_ACCESS_KEY_ID[:5] + "...")
+
+>>> # Тест подключения
+>>> from storages.backends.s3boto3 import S3Boto3Storage
+>>> storage = S3Boto3Storage()
+>>> storage.bucket_name
+
+Если выводится без ошибок - настройки правильные!
+
+═══════════════════════════════════════════════════════════════
+⚡ БЫСТРОЕ РЕШЕНИЕ (если R2 не работает)
+═══════════════════════════════════════════════════════════════
+
+Временно отключите R2 и используйте локальное хранение:
+
+В .env:
+
+USE_R2_STORAGE=False
+USE_R2_FOR_STATIC=False
+
+Затем:
+
+rm -rf staticfiles/*
+python manage.py collectstatic --noinput
+touch .restart.txt
+
+═══════════════════════════════════════════════════════════════
+📋 ЧАСТЫЕ ОШИБКИ
+═══════════════════════════════════════════════════════════════
+
+❌ Bucket name в endpoint URL
+❌ Старые/неправильные API ключи
+❌ Bucket не настроен как public
+❌ CORS политика не настроена
+❌ Неправильные права у API токена
+
+═══════════════════════════════════════════════════════════════
+

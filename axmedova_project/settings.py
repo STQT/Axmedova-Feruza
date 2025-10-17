@@ -131,14 +131,18 @@ if USE_R2_STORAGE:
     AWS_SECRET_ACCESS_KEY = config('R2_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = config('R2_BUCKET_NAME')
     AWS_S3_ENDPOINT_URL = config('R2_ENDPOINT_URL')
-    AWS_S3_REGION_NAME = config('R2_REGION_NAME', default='auto')
+    
+    # R2 specific settings
+    AWS_S3_REGION_NAME = 'auto'  # Cloudflare R2 требует 'auto'
+    AWS_S3_SIGNATURE_VERSION = 's3v4'  # Используем signature v4
+    AWS_S3_ADDRESSING_STYLE = 'path'  # Path-style addressing для R2
     
     # S3 settings
     AWS_S3_CUSTOM_DOMAIN = config('R2_CUSTOM_DOMAIN', default=None)
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
     }
-    AWS_DEFAULT_ACL = 'public-read'
+    AWS_DEFAULT_ACL = None  # R2 не поддерживает ACL, используем bucket policy
     AWS_QUERYSTRING_AUTH = False
     AWS_S3_FILE_OVERWRITE = False
     AWS_S3_VERIFY = True
