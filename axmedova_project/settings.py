@@ -148,13 +148,16 @@ if USE_R2_STORAGE:
     if AWS_S3_CUSTOM_DOMAIN:
         MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
     
-    # Static files - можно тоже на R2 или локально (whitenoise)
-    USE_R2_FOR_STATIC = config('USE_R2_FOR_STATIC', default=False, cast=bool)
+    # Static files - загрузка на R2 для экономии места
+    USE_R2_FOR_STATIC = config('USE_R2_FOR_STATIC', default=True, cast=bool)
     if USE_R2_FOR_STATIC:
         STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
         STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/'
         if AWS_S3_CUSTOM_DOMAIN:
             STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+    else:
+        # Без сжатия, чтобы не превысить квоту диска
+        STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 else:
     # Local storage (default)
     MEDIA_URL = '/media/'
@@ -198,12 +201,13 @@ CKEDITOR_CONFIGS = {
 }
 
 # Whitenoise configuration
-# Use simple storage for tests, compressed manifest for production
+# Use simple storage for tests and when R2 is used
 import sys
 if 'test' in sys.argv:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-else:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+elif not USE_R2_STORAGE:
+    # Используем простое хранилище без сжатия, чтобы не превысить квоту диска
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
