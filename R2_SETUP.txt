@@ -33,13 +33,30 @@
    - Settings → Endpoint URL
    - Скопируйте URL (например: https://1234567890.r2.cloudflarestorage.com)
 
-4. НАСТРОИТЬ CUSTOM DOMAIN (опционально):
+4. НАСТРОИТЬ CORS ПОЛИТИКУ (ВАЖНО!):
+   - Откройте ваш R2 bucket
+   - Settings → CORS policy
+   - Добавьте политику:
+   
+   [
+     {
+       "AllowedOrigins": ["*"],
+       "AllowedMethods": ["GET", "HEAD"],
+       "AllowedHeaders": ["*"],
+       "ExposeHeaders": [],
+       "MaxAgeSeconds": 3600
+     }
+   ]
+   
+   - Сохраните
+
+5. НАСТРОИТЬ CUSTOM DOMAIN (опционально):
    - R2 bucket → Settings → Public access
    - Connect domain → введите ваш домен (например: cdn.axmedova.uz)
    - Настройте DNS в Cloudflare
    - Подождите активации
 
-5. ОБНОВИТЬ .env НА СЕРВЕРЕ:
+6. ОБНОВИТЬ .env НА СЕРВЕРЕ:
 
 # Включить R2 хранилище
 USE_R2_STORAGE=True
@@ -55,11 +72,17 @@ R2_REGION_NAME=auto
 # Для статических файлов на R2 (опционально)
 USE_R2_FOR_STATIC=False
 
-6. УСТАНОВИТЬ ЗАВИСИМОСТИ:
+7. УСТАНОВИТЬ ЗАВИСИМОСТИ:
 
 pip install django-storages boto3
 
-7. ЗАГРУЗИТЬ СУЩЕСТВУЮЩИЕ ФАЙЛЫ НА R2:
+8. ЗАГРУЗИТЬ СТАТИКУ НА R2:
+
+python manage.py collectstatic --noinput
+
+Файлы загрузятся напрямую на R2!
+
+9. ЗАГРУЗИТЬ СУЩЕСТВУЮЩИЕ МЕДИА ФАЙЛЫ НА R2 (если есть):
 
 # Создайте папки в bucket:
 - media/
@@ -70,7 +93,7 @@ pip install django-storages boto3
 
 # Загрузите файлы через Cloudflare Dashboard или AWS CLI
 
-8. ПЕРЕЗАПУСТИТЬ ПРИЛОЖЕНИЕ:
+10. ПЕРЕЗАПУСТИТЬ ПРИЛОЖЕНИЕ:
 
 touch .restart.txt
 

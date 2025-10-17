@@ -141,6 +141,15 @@ if USE_R2_STORAGE:
     AWS_DEFAULT_ACL = 'public-read'
     AWS_QUERYSTRING_AUTH = False
     AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_VERIFY = True
+    AWS_S3_USE_SSL = True
+    
+    # CORS settings для избежания ERR_BLOCKED_BY_ORB
+    AWS_S3_CUSTOM_HEADERS = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, HEAD',
+        'Access-Control-Allow-Headers': '*',
+    }
     
     # Media files on R2
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
