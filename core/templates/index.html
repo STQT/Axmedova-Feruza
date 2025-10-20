@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}Главная - Ахмедова Феруза Медетовна{% endblock %}
 
@@ -55,7 +56,7 @@
                         <h5 class="card-title">{{ service.title }}</h5>
                         <p class="card-text text-muted">{{ service.description|truncatewords:15 }}</p>
                         {% if service.price_from %}
-                        <p class="text-primary fw-bold">От {{ service.price_from }} ₽</p>
+                        <p class="text-primary fw-bold">От {{ service.price_from|format_price }}</p>
                         {% endif %}
                         <a href="{% url 'order_service_direct' service.id %}" class="btn btn-outline-primary">
                             Заказать
@@ -177,7 +178,7 @@
                         <p class="card-text text-muted flex-grow-1">{{ book.short_description|truncatewords:15 }}</p>
                         {% endif %}
                         {% if book.price %}
-                        <h5 class="text-primary mb-3">{{ book.price }} ₽</h5>
+                        <h5 class="text-primary mb-3">{{ book.price|format_price }}</h5>
                         {% endif %}
                         <div class="d-grid gap-2">
                             <a href="{% url 'book_detail' book.slug %}" class="btn btn-outline-primary">
