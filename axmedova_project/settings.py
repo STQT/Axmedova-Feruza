@@ -156,18 +156,22 @@ if USE_R2_STORAGE:
     }
     
     # Media files on R2
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/'
+    DEFAULT_FILE_STORAGE = 'core.storage_backends.MediaStorage'
+    # URL для media - без bucket name, т.к. storage class добавляет location
     if AWS_S3_CUSTOM_DOMAIN:
         MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    else:
+        MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/'
     
     # Static files - загрузка на R2 для экономии места
     USE_R2_FOR_STATIC = config('USE_R2_FOR_STATIC', default=True, cast=bool)
     if USE_R2_FOR_STATIC:
-        STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-        STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/'
+        STATICFILES_STORAGE = 'core.storage_backends.StaticStorage'
+        # URL для static - без bucket name, т.к. storage class добавляет location
         if AWS_S3_CUSTOM_DOMAIN:
             STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+        else:
+            STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/'
     else:
         # Без сжатия, чтобы не превысить квоту диска
         STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
