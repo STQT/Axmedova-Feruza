@@ -139,21 +139,13 @@ if USE_R2_STORAGE:
     
     # S3 settings
     AWS_S3_CUSTOM_DOMAIN = config('R2_CUSTOM_DOMAIN', default=None)
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
     AWS_DEFAULT_ACL = None  # R2 не поддерживает ACL, используем bucket policy
-    AWS_QUERYSTRING_AUTH = False
+    AWS_QUERYSTRING_AUTH = False  # Не добавлять query parameters к URL
     AWS_S3_FILE_OVERWRITE = False
     AWS_S3_VERIFY = True
     AWS_S3_USE_SSL = True
     
-    # CORS settings для избежания ERR_BLOCKED_BY_ORB
-    AWS_S3_CUSTOM_HEADERS = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, HEAD',
-        'Access-Control-Allow-Headers': '*',
-    }
+    # Object parameters теперь настроены в storage_backends.py для каждого типа отдельно
     
     # Media files on R2
     DEFAULT_FILE_STORAGE = 'core.storage_backends.MediaStorage'
