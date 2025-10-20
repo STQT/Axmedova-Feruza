@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://axmedova.uz/sitemap.xml
+
+# Разрешено для всех поисковиков
+Allow: /
+Allow: /about/
+Allow: /services/
+Allow: /publications/
+Allow: /books/
+Allow: /blog/
+Allow: /contact/
+
+# Запретить админку и служебные страницы
+Disallow: /admin/
+Disallow: /order/
+Disallow: /order-book/
+Disallow: /ckeditor/
+
+# Запретить медиафайлы для индексации
+Disallow: /media/
+
