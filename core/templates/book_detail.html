@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}{{ book.title }} - Книги{% endblock %}
 
@@ -63,7 +64,7 @@
                         
                         {% if book.price %}
                         <div class="price mb-3">
-                            <h3 class="text-primary">{{ book.price }} ₽</h3>
+                            <h3 class="text-primary">{{ book.price|format_price }}</h3>
                         </div>
                         {% endif %}
                         

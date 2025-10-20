@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}Услуги - Ахмедова Феруза Медетовна{% endblock %}
 
@@ -46,7 +47,7 @@
                         
                         {% if service.price_from %}
                         <div class="price mb-4">
-                            <h3 class="text-primary mb-0">От {{ service.price_from }} ₽</h3>
+                            <h3 class="text-primary mb-0">От {{ service.price_from|format_price }}</h3>
                         </div>
                         {% endif %}
                         

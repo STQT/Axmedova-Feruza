@@ -40,6 +40,11 @@
                         <form method="post">
                             {% csrf_token %}
                             {{ form|crispy }}
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-shopping-cart"></i> Оформить заказ
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

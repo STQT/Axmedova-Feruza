@@ -45,7 +45,7 @@ class Service(models.Model):
         max_length=100, 
         blank=True,
         default='',
-        help_text='Укажите цену (например, "10000") или "Договорная"'
+        help_text='Укажите цену в сумах (например, "100000") или "Договорная"'
     )
     duration = models.CharField('Длительность', max_length=100, blank=True)
     icon = models.CharField('CSS класс иконки', max_length=100, default='fas fa-chart-bar')
@@ -282,7 +282,7 @@ class Book(models.Model):
         max_length=100, 
         blank=True,
         default='',
-        help_text='Укажите цену (например, "10000") или "Договорная"'
+        help_text='Укажите цену в сумах (например, "100000") или "Договорная"'
     )
     is_available = models.BooleanField('Доступна для заказа', default=True)
     

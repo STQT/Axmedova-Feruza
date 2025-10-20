@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}Книги - Ахмедова Феруза Медетовна{% endblock %}
 
@@ -72,7 +73,7 @@
                         
                         {% if book.price %}
                         <div class="price mb-3">
-                            <h4 class="text-primary mb-0">{{ book.price }} ₽</h4>
+                            <h4 class="text-primary mb-0">{{ book.price|format_price }}</h4>
                         </div>
                         {% endif %}
                         

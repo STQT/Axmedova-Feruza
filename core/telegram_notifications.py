@@ -109,14 +109,17 @@ def format_book_order_message(order) -> str:
 """
     
     if order.book.price:
-        message += f"   • Цена: {order.book.price} руб.\n"
+        if order.book.price.isdigit():
+            message += f"   • Цена: {order.book.price} сум\n"
+        else:
+            message += f"   • Цена: {order.book.price}\n"
     
     message += f"   • Количество: {order.quantity} шт.\n"
     
     # Общая стоимость
     total = order.get_total_price()
     if total:
-        message += f"   • <b>Итого:</b> {total} руб.\n"
+        message += f"   • <b>Итого:</b> {total:,} сум\n".replace(',', ' ')
     
     message += f"""
 👤 <b>Клиент:</b>
