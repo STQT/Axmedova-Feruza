@@ -40,7 +40,13 @@ class Service(models.Model):
     """Услуги социолога"""
     title = models.CharField('Название услуги', max_length=255)
     description = models.TextField('Описание')
-    price_from = models.DecimalField('Цена от', max_digits=10, decimal_places=2, blank=True, null=True)
+    price_from = models.CharField(
+        'Цена от', 
+        max_length=100, 
+        blank=True,
+        default='',
+        help_text='Укажите цену (например, "10000") или "Договорная"'
+    )
     duration = models.CharField('Длительность', max_length=100, blank=True)
     icon = models.CharField('CSS класс иконки', max_length=100, default='fas fa-chart-bar')
     is_active = models.BooleanField('Активна', default=True)
@@ -271,7 +277,13 @@ class Book(models.Model):
     language = models.CharField('Язык', max_length=50, default='Русский')
     
     # Цена и доступность
-    price = models.DecimalField('Цена', max_digits=10, decimal_places=2, blank=True, null=True, help_text='Цена в рублях')
+    price = models.CharField(
+        'Цена', 
+        max_length=100, 
+        blank=True,
+        default='',
+        help_text='Укажите цену (например, "10000") или "Договорная"'
+    )
     is_available = models.BooleanField('Доступна для заказа', default=True)
     
     # Метаданные
@@ -335,7 +347,7 @@ class BookOrder(models.Model):
     
     def get_total_price(self):
         """Расчет общей стоимости"""
-        if self.book.price:
-            return self.book.price * self.quantity
+        if self.book.price and self.book.price.isdigit():
+            return int(self.book.price) * self.quantity
         return None
 

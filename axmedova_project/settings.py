@@ -243,6 +243,10 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@example.com')
 ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@example.com')
 
+# Telegram Bot Configuration
+TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN', default='')
+TELEGRAM_CHAT_ID = config('TELEGRAM_CHAT_ID', default='')
+
 # Security Settings for Production
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
