@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     'core',
 ]
 
+# Middleware configuration
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,6 +51,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# WhiteNoise только если не используется R2 для статики
+# WhiteNoise не нужен, когда статика обслуживается через R2/S3
+USE_R2_STORAGE = config('USE_R2_STORAGE', default=False, cast=bool)
+USE_R2_FOR_STATIC = config('USE_R2_FOR_STATIC', default=True, cast=bool) if USE_R2_STORAGE else False
+
+if not (USE_R2_STORAGE and USE_R2_FOR_STATIC):
+    # Добавляем WhiteNoise только если статика не на R2
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'axmedova_project.urls'
 
@@ -118,12 +127,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = config('STATIC_ROOT', default=BASE_DIR / 'staticfiles')
-
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Media files (local or Cloudflare R2)
-USE_R2_STORAGE = config('USE_R2_STORAGE', default=False, cast=bool)
+# USE_R2_STORAGE уже определен выше для middleware
 
 if USE_R2_STORAGE:
     # Cloudflare R2 Storage Configuration
@@ -156,7 +163,6 @@ if USE_R2_STORAGE:
         MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/'
     
     # Static files - загрузка на R2 для экономии места
-    USE_R2_FOR_STATIC = config('USE_R2_FOR_STATIC', default=True, cast=bool)
     if USE_R2_FOR_STATIC:
         STATICFILES_STORAGE = 'core.storage_backends.StaticStorage'
         # URL для static - без bucket name, т.к. storage class добавляет location
@@ -164,13 +170,29 @@ if USE_R2_STORAGE:
             STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
         else:
             STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/static/'
+        # STATIC_ROOT не нужен при использовании R2, но Django может его проверять
+        # Создаем пустую директорию, чтобы избежать предупреждений
+        # Используем значение из переменной окружения, если оно задано, иначе BASE_DIR
+        try:
+            static_root_path = config('STATIC_ROOT', default=None)
+            if static_root_path:
+                STATIC_ROOT = Path(static_root_path)
+            else:
+                STATIC_ROOT = BASE_DIR / 'staticfiles'
+        except Exception:
+            # Если что-то пошло не так, используем BASE_DIR
+            STATIC_ROOT = BASE_DIR / 'staticfiles'
+        # Создаем директорию, если она не существует (чтобы избежать предупреждений)
+        STATIC_ROOT.mkdir(parents=True, exist_ok=True)
     else:
         # Без сжатия, чтобы не превысить квоту диска
         STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+        STATIC_ROOT = config('STATIC_ROOT', default=BASE_DIR / 'staticfiles')
 else:
     # Local storage (default)
     MEDIA_URL = '/media/'
     MEDIA_ROOT = config('MEDIA_ROOT', default=BASE_DIR / 'media')
+    STATIC_ROOT = config('STATIC_ROOT', default=BASE_DIR / 'staticfiles')
 
 
 # CKEditor Configuration
@@ -210,13 +232,12 @@ CKEDITOR_CONFIGS = {
 }
 
 # Whitenoise configuration
-# Use simple storage for tests and when R2 is used
+# Use simple storage for tests
 import sys
 if 'test' in sys.argv:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-elif not USE_R2_STORAGE:
-    # Используем простое хранилище без сжатия, чтобы не превысить квоту диска
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    if not USE_R2_STORAGE:
+        STATIC_ROOT = config('STATIC_ROOT', default=BASE_DIR / 'staticfiles')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

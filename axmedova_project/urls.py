@@ -25,12 +25,18 @@ urlpatterns = [
 ]
 
 # Serve media files in development and production (fallback)
+# Не обслуживаем статику локально, если используется R2
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    if hasattr(settings, 'MEDIA_ROOT') and settings.MEDIA_ROOT:
+        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Статика через R2 не обслуживается локально
+    if hasattr(settings, 'STATIC_ROOT') and settings.STATIC_ROOT and not (hasattr(settings, 'USE_R2_STORAGE') and settings.USE_R2_STORAGE and getattr(settings, 'USE_R2_FOR_STATIC', False)):
+        urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 else:
     # Serve media files in production as fallback (when .htaccess doesn't work)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Только если не используется R2
+    if hasattr(settings, 'MEDIA_ROOT') and settings.MEDIA_ROOT and not (hasattr(settings, 'USE_R2_STORAGE') and settings.USE_R2_STORAGE):
+        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Customize admin site
 admin.site.site_header = "Ахмедова Феруза Медетовна - Администрирование"
