@@ -220,9 +220,28 @@ section.band.dense{ padding:18px 0; }
 }
 .portrait-img{
   width:100%; height:100%; object-fit:cover; object-position: 50% 25%;
-  display:block; filter: saturate(.92) contrast(.96);
+  display:block;
+  filter: sepia(.28) saturate(.78) contrast(.94) brightness(1.02);
 }
-body[data-theme="dark"] .portrait-img{ filter: saturate(.8) contrast(.9) brightness(.85); }
+/* warm paper tint overlay so portrait sits on the beige paper */
+.portrait-frame::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: var(--paper);
+  mix-blend-mode: soft-light;
+  opacity: .5;
+}
+.portrait-frame::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: linear-gradient(180deg, rgba(243,236,221,.18) 0%, rgba(243,236,221,0) 35%, rgba(243,236,221,0) 70%, rgba(140,42,31,.06) 100%);
+  z-index:1;
+}
+body[data-theme="dark"] .portrait-img{ filter: sepia(.18) saturate(.7) contrast(.9) brightness(.82); }
+body[data-theme="dark"] .portrait-frame::after{ background: var(--ink); opacity:.35; }
+
+/* Apply the same warm-paper treatment to any img marked .paper-img
+   (used for inline hero/cover images that aren't inside .portrait-frame). */
+.paper-img{ filter: sepia(.25) saturate(.8) contrast(.94) brightness(1.02); }
+body[data-theme="dark"] .paper-img{ filter: sepia(.15) saturate(.7) contrast(.9) brightness(.82); }
 
 .drop{
   float:left; font-family:var(--display); font-size:72px; line-height:.85;
@@ -238,10 +257,28 @@ body[data-theme="dark"] .portrait-img{ filter: saturate(.8) contrast(.9) brightn
 
 .book-card{ display:flex; flex-direction:column; gap:8px; }
 .book-cover{
+  position:relative;
   aspect-ratio: 2/3; background:var(--paper-2); border:1px solid var(--rule);
   overflow:hidden; display:flex; align-items:center; justify-content:center;
 }
-.book-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+.book-cover img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  filter: sepia(.22) saturate(.82) contrast(.95) brightness(1.01);
+  transition: filter .3s;
+}
+.book-cover::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: var(--paper);
+  mix-blend-mode: soft-light;
+  opacity: .45;
+}
+.book-cover::before{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
+  background: linear-gradient(180deg, rgba(243,236,221,.2) 0%, rgba(243,236,221,0) 40%);
+}
+.book-card:hover .book-cover img{ filter: sepia(.12) saturate(.9) contrast(.98); }
+body[data-theme="dark"] .book-cover img{ filter: sepia(.15) saturate(.7) contrast(.9) brightness(.85); }
+body[data-theme="dark"] .book-cover::after{ background: var(--ink); opacity:.3; }
 .book-cover .placeholder{
   font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--ink-faded);
   text-align:center; padding:12px;
@@ -274,9 +311,20 @@ body[data-theme="dark"] .portrait-img{ filter: saturate(.8) contrast(.9) brightn
 }
 .post-card:hover{ transform: translateY(-2px); box-shadow: 6px 6px 0 0 var(--rule); }
 .post-card .img{
+  position:relative;
   aspect-ratio: 16/10; background:var(--paper-2); overflow:hidden;
 }
-.post-card .img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.post-card .img img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  filter: sepia(.22) saturate(.82) contrast(.95);
+  transition: filter .3s;
+}
+.post-card .img::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: var(--paper); mix-blend-mode: soft-light; opacity:.45;
+}
+.post-card:hover .img img{ filter: sepia(.1) saturate(.92) contrast(.98); }
+body[data-theme="dark"] .post-card .img img{ filter: sepia(.15) saturate(.7) contrast(.9) brightness(.85); }
 .post-card .body{ padding:18px 20px; display:flex; flex-direction:column; gap:8px; flex:1; }
 .post-card h3{
   font-family:var(--display); font-size:22px; line-height:1.2; margin:0;

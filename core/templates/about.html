@@ -29,9 +29,9 @@
     <div class="grid-12" style="border:1.5px solid var(--ink);">
         <div class="col-span-5" style="position:relative; aspect-ratio: 3/4; min-height:520px; overflow:hidden; background:var(--paper-2);">
             {% if profile.photo %}
-                <img src="{{ profile.photo.url }}" alt="{{ profile.full_name }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: 50% 30%; filter: saturate(.92) contrast(.96);" />
+                <img class="paper-img" src="{{ profile.photo.url }}" alt="{{ profile.full_name }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: 50% 30%;" />
             {% else %}
-                <img src="{% static 'images/author-portrait.jpg' %}" alt="{{ profile.full_name }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: 50% 30%; filter: saturate(.92) contrast(.96);" />
+                <img class="paper-img" src="{% static 'images/author-portrait.jpg' %}" alt="{{ profile.full_name }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: 50% 30%;" />
             {% endif %}
             <div style="position:absolute; inset:0; background: linear-gradient(180deg, rgba(243,236,221,0) 55%, rgba(29,26,20,.55) 100%);"></div>
             <div class="mono" style="position:absolute; top:18px; left:18px; font-size:10px; letter-spacing:.22em; color:#f3ecdd;">ФОТО · АРХИВ АВТОРА</div>
@@ -135,7 +135,7 @@
                 </div>
                 {% if a.certificate_image %}
                 <div style="width:120px;">
-                    <img src="{{ a.certificate_image.url }}" alt="{{ a.title }}" style="width:100%; border:1px solid var(--rule);" />
+                    <img class="paper-img" src="{{ a.certificate_image.url }}" alt="{{ a.title }}" style="width:100%; border:1px solid var(--rule);" />
                 </div>
                 {% endif %}
             </div>
