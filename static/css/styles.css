@@ -244,7 +244,7 @@ body[data-theme="dark"] .portrait-frame::after{ background: var(--ink); opacity:
 body[data-theme="dark"] .paper-img{ filter: sepia(.15) saturate(.7) contrast(.9) brightness(.82); }
 
 .drop{
-  float:left; font-family:var(--display); font-size:72px; line-height:.85;
+  float:initial; font-family:var(--display); font-size:72px; line-height:.85;
   padding:6px 10px 0 0; font-weight:900; color:var(--ink);
 }
 
