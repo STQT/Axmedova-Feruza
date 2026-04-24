@@ -2,120 +2,81 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Заказать книгу - Ахмедова Феруза Медетовна{% endblock %}
+{% block title %}Заказать книгу — Ахмедова Феруза Медетовна{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header bg-light py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="display-4 fw-bold">Заказать книгу</h1>
-                <p class="lead text-muted">Заполните форму, и мы свяжемся с вами для уточнения деталей доставки</p>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center">
-                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'books' %}">Книги</a></li>
-                        <li class="breadcrumb-item active">Заказать</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="sheet-narrow">
 
-<!-- Order Form Section -->
-<section class="order-form-section py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="card shadow-sm">
-                    <div class="card-body p-5">
-                        <div class="text-center mb-4">
-                            <i class="fas fa-shopping-cart fa-4x text-primary mb-3"></i>
-                            <h3 class="fw-bold">Форма заказа книги</h3>
-                            <p class="text-muted">Пожалуйста, заполните все обязательные поля</p>
-                        </div>
-                        
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-shopping-cart"></i> Оформить заказ
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                
-                <!-- Info Box -->
-                <div class="alert alert-info mt-4">
-                    <h5 class="alert-heading"><i class="fas fa-info-circle"></i> Информация о доставке</h5>
-                    <ul class="mb-0">
-                        <li>После оформления заказа мы свяжемся с вами в течение 1-2 рабочих дней</li>
-                        <li>Уточним детали доставки и способ оплаты</li>
-                        <li>Доставка осуществляется по всей стране</li>
-                        <li>Все данные конфиденциальны и не передаются третьим лицам</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <div class="crumbs">
+        <a href="{% url 'index' %}">Главная</a><span>·</span>
+        <a href="{% url 'books' %}">Книги</a><span>·</span>
+        Заказать
     </div>
-</section>
 
-<!-- Features Section -->
-<section class="features-section py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Почему стоит заказать у нас?</h2>
+    <div class="page-head">
+        <div>
+            <div class="smallcaps" style="color:var(--accent);">Book order · request form</div>
+            <h1>Заказать книгу</h1>
         </div>
-        <div class="row g-4">
-            <div class="col-md-3 text-center">
-                <div class="feature-box p-4">
-                    <i class="fas fa-book fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Качество</h5>
-                    <p class="text-muted">Оригинальные издания</p>
-                </div>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-box p-4">
-                    <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Быстрая доставка</h5>
-                    <p class="text-muted">По всей стране</p>
-                </div>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-box p-4">
-                    <i class="fas fa-hand-holding-usd fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Гибкая оплата</h5>
-                    <p class="text-muted">Удобные способы оплаты</p>
-                </div>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-box p-4">
-                    <i class="fas fa-headset fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Поддержка</h5>
-                    <p class="text-muted">Консультации по телефону</p>
-                </div>
-            </div>
+        <div class="meta">
+            <div><b>Ответ:</b> 1–2 рабочих дня</div>
+            <div><b>Доставка:</b> по всей стране</div>
         </div>
     </div>
-</section>
 
-<!-- Alternative Contact -->
-<section class="alternative-contact-section py-5">
-    <div class="container">
-        <div class="card bg-primary text-white shadow-lg">
-            <div class="card-body text-center py-5">
-                <h2 class="fw-bold mb-3">Есть вопросы по заказу?</h2>
-                <p class="lead mb-4">Свяжитесь с нами напрямую</p>
-                <a href="{% url 'contact' %}" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope"></i> Написать нам
-                </a>
-            </div>
+    <p class="serif" style="font-size:17px; line-height:1.7; color:var(--ink-soft); max-width:680px; margin:0 0 28px;">
+        Заполните форму — мы свяжемся с вами для уточнения деталей доставки и способа оплаты.
+    </p>
+
+    <form method="post" class="paper-card shadow">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn-edit solid mt-3" style="width:100%;">Оформить заказ →</button>
+    </form>
+
+    <div class="alert" style="margin-top:24px;">
+        <div class="smallcaps" style="margin-bottom:6px; color:var(--ink);">О доставке</div>
+        <ul style="margin:6px 0 0; padding-left:18px; font-family:var(--serif); font-size:14px; line-height:1.65; text-transform:none; letter-spacing:0;">
+            <li>После оформления заказа свяжемся с вами в течение 1–2 рабочих дней.</li>
+            <li>Уточним детали доставки и способ оплаты.</li>
+            <li>Доставка осуществляется по всей стране.</li>
+            <li>Все данные конфиденциальны.</li>
+        </ul>
+    </div>
+
+    <hr class="rule-h dbl" style="margin:40px 0 24px;" />
+    <div class="section-head">
+        <h2>Почему стоит заказать</h2>
+        <span class="meta">04 причины</span>
+    </div>
+
+    <div class="grid-12">
+        <div class="col-span-3">
+            <div class="mono" style="font-size:10px; letter-spacing:.2em; color:var(--accent);">01</div>
+            <h3 class="display" style="font-size:20px; margin:6px 0;">Качество</h3>
+            <p class="soft" style="font-size:14px; line-height:1.55;">Оригинальные издания.</p>
+        </div>
+        <div class="col-span-3">
+            <div class="mono" style="font-size:10px; letter-spacing:.2em; color:var(--accent);">02</div>
+            <h3 class="display" style="font-size:20px; margin:6px 0;">Доставка</h3>
+            <p class="soft" style="font-size:14px; line-height:1.55;">По всей стране.</p>
+        </div>
+        <div class="col-span-3">
+            <div class="mono" style="font-size:10px; letter-spacing:.2em; color:var(--accent);">03</div>
+            <h3 class="display" style="font-size:20px; margin:6px 0;">Оплата</h3>
+            <p class="soft" style="font-size:14px; line-height:1.55;">Удобные способы оплаты.</p>
+        </div>
+        <div class="col-span-3">
+            <div class="mono" style="font-size:10px; letter-spacing:.2em; color:var(--accent);">04</div>
+            <h3 class="display" style="font-size:20px; margin:6px 0;">Поддержка</h3>
+            <p class="soft" style="font-size:14px; line-height:1.55;">Консультации по телефону.</p>
         </div>
     </div>
+</div>
+
+<section class="cta-band">
+    <h2>Есть вопросы по заказу?</h2>
+    <p>Свяжитесь с нами напрямую</p>
+    <a href="{% url 'contact' %}" class="btn-edit solid">Написать нам</a>
 </section>
 {% endblock %}
-

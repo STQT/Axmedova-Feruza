@@ -2,167 +2,123 @@
 {% load static %}
 {% load custom_filters %}
 
-{% block title %}{{ book.title }} - Книги{% endblock %}
+{% block title %}{{ book.title }} — Книги{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header bg-light py-3">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'books' %}">Книги</a></li>
-                <li class="breadcrumb-item active">{{ book.title|truncatewords:5 }}</li>
-            </ol>
-        </nav>
-    </div>
-</section>
+<div class="sheet">
 
-<!-- Book Detail Section -->
-<section class="book-detail-section py-5">
-    <div class="container">
-        <div class="row">
-            <!-- Book Info -->
-            <div class="col-lg-4 mb-4">
-                <div class="card shadow-sm mb-4">
+    <div class="crumbs">
+        <a href="{% url 'index' %}">Главная</a><span>·</span>
+        <a href="{% url 'books' %}">Книги</a><span>·</span>
+        {{ book.title|truncatewords:5 }}
+    </div>
+
+    <div class="grid-12" style="margin-top:24px;">
+        <!-- Book sidebar card -->
+        <div class="col-span-4">
+            <div class="paper-card shadow">
+                <div class="book-cover" style="aspect-ratio:2/3; margin:-20px -22px 18px; border:0; border-bottom:1px solid var(--ink);">
                     {% if book.cover_image %}
-                    <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+                        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" />
                     {% else %}
-                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
-                        <i class="fas fa-book fa-5x text-muted"></i>
-                    </div>
+                        <div class="placeholder">{{ book.title }}</div>
                     {% endif %}
-                    <div class="card-body">
-                        <h3 class="card-title fw-bold mb-3">{{ book.title }}</h3>
-                        <p class="text-muted mb-2">
-                            <i class="fas fa-user"></i> <strong>Автор:</strong> {{ book.author }}
-                        </p>
-                        <p class="text-muted mb-2">
-                            <i class="fas fa-calendar"></i> <strong>Год:</strong> {{ book.publication_year }}
-                        </p>
-                        {% if book.publisher %}
-                        <p class="text-muted mb-2">
-                            <i class="fas fa-building"></i> <strong>Издательство:</strong> {{ book.publisher }}
-                        </p>
-                        {% endif %}
-                        {% if book.pages %}
-                        <p class="text-muted mb-2">
-                            <i class="fas fa-file-alt"></i> <strong>Страниц:</strong> {{ book.pages }}
-                        </p>
-                        {% endif %}
-                        {% if book.isbn %}
-                        <p class="text-muted mb-2">
-                            <strong>ISBN:</strong> {{ book.isbn }}
-                        </p>
-                        {% endif %}
-                        <p class="text-muted mb-2">
-                            <i class="fas fa-language"></i> <strong>Язык:</strong> {{ book.language }}
-                        </p>
-                        <p class="text-muted mb-3">
-                            <i class="fas fa-eye"></i> <strong>Просмотров:</strong> {{ book.views_count }}
-                        </p>
-                        
-                        {% if book.price %}
-                        <div class="price mb-3">
-                            <h3 class="text-primary">{{ book.price|format_price }}</h3>
-                        </div>
-                        {% endif %}
-                        
-                        {% if book.is_available %}
-                        <div class="d-grid">
-                            <a href="{% url 'order_book_direct' book.id %}" class="btn btn-primary btn-lg">
-                                <i class="fas fa-shopping-cart"></i> Заказать книгу
-                            </a>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle"></i> Книга временно недоступна
-                        </div>
-                        {% endif %}
-                    </div>
                 </div>
-            </div>
-            
-            <!-- Book Content -->
-            <div class="col-lg-8">
-                <!-- Description -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h4 class="fw-bold mb-3">Описание</h4>
-                        <div class="book-description">
-                            {{ book.description|safe }}
-                        </div>
-                    </div>
+
+                <div class="mono" style="font-size:10px; color:var(--ink-faded); letter-spacing:.18em;">№ AX-BOOK · {{ book.publication_year }}</div>
+                <h1 class="display" style="font-size:26px; line-height:1.15; font-weight:700; margin:6px 0 14px;">{{ book.title }}</h1>
+
+                <div style="display:grid; grid-template-columns: 100px 1fr; gap:8px 12px; font-size:14px; line-height:1.55;">
+                    <div class="mono" style="color:var(--ink-faded); font-size:10px; letter-spacing:.14em;">АВТОР</div>
+                    <div>{{ book.author }}</div>
+
+                    <div class="mono" style="color:var(--ink-faded); font-size:10px; letter-spacing:.14em;">ГОД</div>
+                    <div>{{ book.publication_year }}</div>
+
+                    {% if book.publisher %}
+                    <div class="mono" style="color:var(--ink-faded); font-size:10px; letter-spacing:.14em;">ИЗД-ВО</div>
+                    <div>{{ book.publisher }}</div>
+                    {% endif %}
+
+                    {% if book.pages %}
+                    <div class="mono" style="color:var(--ink-faded); font-size:10px; letter-spacing:.14em;">СТРАНИЦ</div>
+                    <div>{{ book.pages }}</div>
+                    {% endif %}
+
+                    {% if book.isbn %}
+                    <div class="mono" style="color:var(--ink-faded); font-size:10px; letter-spacing:.14em;">ISBN</div>
+                    <div class="mono">{{ book.isbn }}</div>
+                    {% endif %}
+
+                    <div class="mono" style="color:var(--ink-faded); font-size:10px; letter-spacing:.14em;">ЯЗЫК</div>
+                    <div>{{ book.language }}</div>
                 </div>
-                
-                <!-- PDF Preview -->
-                {% if book.pdf_file %}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h4 class="fw-bold mb-3">
-                            <i class="fas fa-file-pdf text-danger"></i> Предпросмотр книги
-                        </h4>
-                        <div class="pdf-viewer" style="height: 600px; border: 1px solid #dee2e6; border-radius: 5px;">
-                            <embed src="{{ book.pdf_file.url }}" 
-                                   type="application/pdf" 
-                                   width="100%" 
-                                   height="100%"
-                                   style="border-radius: 5px;">
-                        </div>
-                        <div class="mt-3 text-center">
-                            <a href="{{ book.pdf_file.url }}" 
-                               class="btn btn-outline-danger" 
-                               target="_blank"
-                               download>
-                                <i class="fas fa-download"></i> Скачать PDF
-                            </a>
-                        </div>
-                    </div>
-                </div>
+
+                <hr class="rule-h dashed" style="margin:18px 0;" />
+
+                {% if book.price %}
+                <div class="display" style="font-size:36px; font-weight:900; color:var(--accent); line-height:1; margin:0 0 4px;">{{ book.price|format_price }}</div>
+                <div class="mono" style="font-size:10px; color:var(--ink-faded); letter-spacing:.14em; margin-bottom:14px;">ЦЕНА</div>
                 {% endif %}
-                
-                <!-- Related Books -->
-                {% if related_books %}
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h4 class="fw-bold mb-4">Другие книги</h4>
-                        <div class="row g-3">
-                            {% for related_book in related_books %}
-                            <div class="col-md-4">
-                                <div class="card h-100">
-                                    {% if related_book.cover_image %}
-                                    <img src="{{ related_book.cover_image.url }}" 
-                                         class="card-img-top" 
-                                         alt="{{ related_book.title }}"
-                                         style="height: 200px; object-fit: cover;">
-                                    {% endif %}
-                                    <div class="card-body">
-                                        <h6 class="card-title">{{ related_book.title|truncatewords:6 }}</h6>
-                                        <p class="text-muted small">{{ related_book.publication_year }}</p>
-                                        <a href="{% url 'book_detail' related_book.slug %}" 
-                                           class="btn btn-sm btn-outline-primary w-100">
-                                            Подробнее
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+
+                {% if book.is_available %}
+                    <a href="{% url 'order_book_direct' book.id %}" class="btn-edit solid w-full" style="display:block; text-align:center;">Заказать книгу →</a>
+                {% else %}
+                    <div class="alert">Временно недоступна</div>
                 {% endif %}
+
+                <div class="mono" style="font-size:10px; color:var(--ink-faded); letter-spacing:.14em; margin-top:14px; text-align:center;">
+                    {{ book.views_count }} ПРОСМОТРОВ
+                </div>
             </div>
         </div>
-    </div>
-</section>
 
-<!-- Back to Books -->
-<section class="py-3 bg-light">
-    <div class="container">
-        <a href="{% url 'books' %}" class="btn btn-outline-primary">
-            <i class="fas fa-arrow-left"></i> Вернуться к списку книг
-        </a>
+        <!-- Main content -->
+        <div class="col-span-8">
+            <div class="smallcaps" style="color:var(--accent);">Описание</div>
+            <h2 class="display" style="font-size:32px; font-weight:700; margin:6px 0 20px;">О книге</h2>
+            <div class="rich-content">
+                {{ book.description|safe }}
+            </div>
+
+            {% if book.pdf_file %}
+            <hr class="rule-h dbl" style="margin:40px 0 20px;" />
+            <div class="section-head">
+                <h2>Предпросмотр</h2>
+                <a href="{{ book.pdf_file.url }}" target="_blank" download class="chip">Скачать PDF</a>
+            </div>
+            <div style="border:1.5px solid var(--ink); padding:6px; background:var(--paper-2);">
+                <embed src="{{ book.pdf_file.url }}" type="application/pdf" width="100%" height="600" style="display:block;" />
+            </div>
+            {% endif %}
+
+            {% if related_books %}
+            <hr class="rule-h dbl" style="margin:40px 0 20px;" />
+            <div class="section-head">
+                <h2>Другие книги</h2>
+                <a href="{% url 'books' %}" class="chip">Все книги →</a>
+            </div>
+
+            <div class="grid-12">
+                {% for r in related_books %}
+                <div class="col-span-4">
+                    <div class="book-card">
+                        <div class="book-cover">
+                            {% if r.cover_image %}
+                                <img src="{{ r.cover_image.url }}" alt="{{ r.title }}" />
+                            {% else %}
+                                <div class="placeholder">{{ r.title|truncatewords:3 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="book-meta">{{ r.publication_year }}</div>
+                        <a href="{% url 'book_detail' r.slug %}" class="book-title" style="font-size:17px;">{{ r.title|truncatewords:7 }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
     </div>
-</section>
+
+</div>
 {% endblock %}
-

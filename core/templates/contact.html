@@ -2,140 +2,89 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Контакты - Ахмедова Феруза Медетовна{% endblock %}
+{% block title %}Контакты — Ахмедова Феруза Медетовна{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header bg-light py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="display-4 fw-bold">Контакты</h1>
-                <p class="lead text-muted">Свяжитесь со мной для консультации или сотрудничества</p>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center">
-                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
-                        <li class="breadcrumb-item active">Контакты</li>
-                    </ol>
-                </nav>
-            </div>
+<div class="sheet">
+
+    <div class="crumbs">
+        <a href="{% url 'index' %}">Главная</a><span>·</span>Контакты
+    </div>
+
+    <div class="page-head">
+        <div>
+            <div class="smallcaps" style="color:var(--accent);">Correspondence</div>
+            <h1>Контакты</h1>
+        </div>
+        <div class="meta">
+            <div><b>Отвечаем:</b> пн–пт, 10:00–18:00</div>
+            <div><b>Язык:</b> UZ · RU · EN</div>
         </div>
     </div>
-</section>
 
-<!-- Contact Section -->
-<section class="contact-section py-5">
-    <div class="container">
-        <div class="row g-5">
-            <!-- Contact Info -->
-            <div class="col-lg-4">
-                <div class="contact-info">
-                    <h3 class="fw-bold mb-4">Контактная информация</h3>
-                    
-                    {% if profile %}
-                    <div class="info-item mb-4">
-                        <div class="d-flex align-items-start">
-                            <div class="icon-box bg-primary text-white rounded p-3 me-3">
-                                <i class="fas fa-user fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="fw-bold">Имя</h5>
-                                <p class="text-muted">{{ profile.full_name }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item mb-4">
-                        <div class="d-flex align-items-start">
-                            <div class="icon-box bg-primary text-white rounded p-3 me-3">
-                                <i class="fas fa-envelope fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="fw-bold">Email</h5>
-                                <p class="text-muted">
-                                    <a href="mailto:{{ profile.email }}" class="text-decoration-none">{{ profile.email }}</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item mb-4">
-                        <div class="d-flex align-items-start">
-                            <div class="icon-box bg-primary text-white rounded p-3 me-3">
-                                <i class="fas fa-phone fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="fw-bold">Телефон</h5>
-                                <p class="text-muted">
-                                    <a href="tel:{{ profile.phone }}" class="text-decoration-none">{{ profile.phone }}</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
+    <div class="grid-12">
+        <!-- Contact info card -->
+        <div class="col-span-5">
+            <div class="paper-card shadow">
+                <div class="mono" style="font-size:10px; letter-spacing:.2em; color:var(--ink-faded);">КАРТОЧКА КОНТАКТА · AX-C01</div>
+                <hr class="rule-h" style="margin:10px 0 18px;" />
+
+                {% if profile %}
+                <div class="display" style="font-size:28px; line-height:1.1; font-weight:700; margin:0 0 16px;">
+                    {{ profile.full_name }}
+                </div>
+
+                <div style="display:grid; grid-template-columns: 80px 1fr; gap:12px 14px; font-size:15px; line-height:1.65;">
+                    <div class="mono" style="font-size:10px; letter-spacing:.16em; color:var(--ink-faded);">EMAIL</div>
+                    <div><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></div>
+
+                    <div class="mono" style="font-size:10px; letter-spacing:.16em; color:var(--ink-faded);">ТЕЛЕФОН</div>
+                    <div><a href="tel:{{ profile.phone }}">{{ profile.phone }}</a></div>
+
                     {% if profile.address %}
-                    <div class="info-item mb-4">
-                        <div class="d-flex align-items-start">
-                            <div class="icon-box bg-primary text-white rounded p-3 me-3">
-                                <i class="fas fa-map-marker-alt fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="fw-bold">Адрес</h5>
-                                <p class="text-muted">{{ profile.address }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="mono" style="font-size:10px; letter-spacing:.16em; color:var(--ink-faded);">АДРЕС</div>
+                    <div>{{ profile.address }}</div>
                     {% endif %}
-                    
-                    <div class="social-links mt-4">
-                        <h5 class="fw-bold mb-3">Социальные сети</h5>
-                        <div class="d-flex gap-2">
-                            {% if profile.linkedin %}
-                            <a href="{{ profile.linkedin }}" class="btn btn-outline-primary" target="_blank">
-                                <i class="fab fa-linkedin fa-2x"></i>
-                            </a>
-                            {% endif %}
-                            {% if profile.facebook %}
-                            <a href="{{ profile.facebook }}" class="btn btn-outline-primary" target="_blank">
-                                <i class="fab fa-facebook fa-2x"></i>
-                            </a>
-                            {% endif %}
-                            {% if profile.researchgate %}
-                            <a href="{{ profile.researchgate }}" class="btn btn-outline-primary" target="_blank">
-                                <i class="fab fa-researchgate fa-2x"></i>
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
+
+                    {% if profile.languages %}
+                    <div class="mono" style="font-size:10px; letter-spacing:.16em; color:var(--ink-faded);">ЯЗЫКИ</div>
+                    <div>{{ profile.languages }}</div>
                     {% endif %}
                 </div>
-            </div>
-            
-            <!-- Contact Form -->
-            <div class="col-lg-8">
-                <div class="card shadow-sm">
-                    <div class="card-body p-4">
-                        <h3 class="fw-bold mb-4">Отправить сообщение</h3>
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                        </form>
-                    </div>
+
+                <hr class="rule-h dashed" style="margin:18px 0;" />
+
+                <div class="smallcaps" style="color:var(--ink-soft);">Социальные сети</div>
+                <div class="flex flex-wrap gap-2" style="margin-top:10px;">
+                    {% if profile.linkedin %}<a href="{{ profile.linkedin }}" target="_blank" rel="noopener" class="chip">LinkedIn</a>{% endif %}
+                    {% if profile.facebook %}<a href="{{ profile.facebook }}" target="_blank" rel="noopener" class="chip">Facebook</a>{% endif %}
+                    {% if profile.researchgate %}<a href="{{ profile.researchgate }}" target="_blank" rel="noopener" class="chip">ResearchGate</a>{% endif %}
+                    {% if profile.orcid %}<a href="https://orcid.org/{{ profile.orcid }}" target="_blank" rel="noopener" class="chip">ORCID</a>{% endif %}
                 </div>
+                {% else %}
+                <p class="soft">Контактная информация скоро появится.</p>
+                {% endif %}
             </div>
         </div>
-    </div>
-</section>
 
-<!-- CTA Section -->
-<section class="cta-section py-5 bg-primary text-white">
-    <div class="container text-center">
-        <h2 class="fw-bold mb-3">Нужна консультация социолога?</h2>
-        <p class="lead mb-4">Закажите профессиональную услугу прямо сейчас</p>
-        <a href="{% url 'order_service' %}" class="btn btn-light btn-lg">
-            <i class="fas fa-paper-plane"></i> Заказать услугу
-        </a>
+        <!-- Contact form -->
+        <div class="col-span-7">
+            <div class="smallcaps" style="color:var(--accent);">Отправить сообщение</div>
+            <h2 class="display" style="font-size:30px; font-weight:700; margin:6px 0 18px;">Форма обратной связи</h2>
+
+            <form method="post" class="paper-card">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn-edit solid mt-3">Отправить сообщение →</button>
+            </form>
+        </div>
     </div>
+
+</div>
+
+<section class="cta-band">
+    <h2>Нужна консультация социолога?</h2>
+    <p>Закажите профессиональную услугу прямо сейчас</p>
+    <a href="{% url 'order_service' %}" class="btn-edit solid">Заказать услугу</a>
 </section>
 {% endblock %}
-

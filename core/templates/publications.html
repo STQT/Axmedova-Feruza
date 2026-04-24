@@ -1,45 +1,46 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Публикации - Ахмедова Феруза Медетовна{% endblock %}
+{% block title %}Публикации — Ахмедова Феруза Медетовна{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header bg-light py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="display-4 fw-bold">Научные публикации</h1>
-                <p class="lead text-muted">Научные работы и исследования</p>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center">
-                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
-                        <li class="breadcrumb-item active">Публикации</li>
-                    </ol>
-                </nav>
-            </div>
+<div class="sheet">
+
+    <div class="crumbs">
+        <a href="{% url 'index' %}">Главная</a><span>·</span>Публикации
+    </div>
+
+    <div class="page-head">
+        <div>
+            <div class="smallcaps" style="color:var(--accent);">Bibliography</div>
+            <h1>Научные публикации</h1>
+        </div>
+        <div class="meta">
+            <div><b>Всего:</b> {{ page_obj.paginator.count }}</div>
+            <div><b>h-index:</b> 14 · i10: 23</div>
         </div>
     </div>
-</section>
 
-<!-- Search and Filter Section -->
-<section class="filter-section py-4 bg-white shadow-sm">
-    <div class="container">
-        <form method="get" class="row g-3">
-            <div class="col-md-4">
-                <input type="text" name="search" class="form-control" placeholder="Поиск по названию, авторам, ключевым словам..." value="{{ search_query }}">
+    <!-- Filter form -->
+    <form method="get" class="paper-card" style="margin:0 0 32px;">
+        <div class="grid-12" style="gap:16px;">
+            <div class="col-span-5">
+                <label class="form-label">Поиск</label>
+                <input type="text" name="search" class="form-control" placeholder="Название, авторы, ключевые слова…" value="{{ search_query|default_if_none:'' }}">
             </div>
-            <div class="col-md-3">
+            <div class="col-span-3">
+                <label class="form-label">Тип</label>
                 <select name="type" class="form-select">
-                    <option value="">Все типы публикаций</option>
+                    <option value="">Все типы</option>
                     <option value="article" {% if current_type == 'article' %}selected{% endif %}>Статья</option>
                     <option value="book" {% if current_type == 'book' %}selected{% endif %}>Книга</option>
-                    <option value="chapter" {% if current_type == 'chapter' %}selected{% endif %}>Глава в книге</option>
+                    <option value="chapter" {% if current_type == 'chapter' %}selected{% endif %}>Глава</option>
                     <option value="conference" {% if current_type == 'conference' %}selected{% endif %}>Конференция</option>
                     <option value="thesis" {% if current_type == 'thesis' %}selected{% endif %}>Диссертация</option>
                 </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-span-2">
+                <label class="form-label">Год</label>
                 <select name="year" class="form-select">
                     <option value="">Все годы</option>
                     {% for year in years %}
@@ -47,132 +48,68 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="fas fa-search"></i> Поиск
-                </button>
+            <div class="col-span-2" style="display:flex; align-items:end;">
+                <button type="submit" class="btn-edit solid w-full">Поиск</button>
             </div>
-        </form>
-    </div>
-</section>
+        </div>
+    </form>
 
-<!-- Publications Section -->
-<section class="publications-section py-5">
-    <div class="container">
-        {% if page_obj %}
-        <div class="publications-list">
-            {% for publication in page_obj %}
-            <div class="card mb-4 shadow-sm publication-card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div class="mb-2">
-                                <span class="badge bg-info">{{ publication.get_publication_type_display }}</span>
-                                {% if publication.is_featured %}
-                                <span class="badge bg-warning"><i class="fas fa-star"></i> Избранное</span>
-                                {% endif %}
-                            </div>
-                            <h4 class="card-title mb-3">{{ publication.title }}</h4>
-                            <p class="text-muted mb-2">
-                                <i class="fas fa-users"></i> <strong>Авторы:</strong> {{ publication.authors }}
-                            </p>
-                            <p class="text-muted mb-2">
-                                <i class="fas fa-calendar"></i> <strong>Год:</strong> {{ publication.year }}
-                                {% if publication.journal %}
-                                | <i class="fas fa-book"></i> <strong>Журнал:</strong> {{ publication.journal }}
-                                {% endif %}
-                                {% if publication.publisher %}
-                                | <i class="fas fa-building"></i> <strong>Издатель:</strong> {{ publication.publisher }}
-                                {% endif %}
-                            </p>
-                            {% if publication.volume or publication.pages %}
-                            <p class="text-muted mb-2">
-                                {% if publication.volume %}<strong>Том:</strong> {{ publication.volume }}{% endif %}
-                                {% if publication.pages %} | <strong>Страницы:</strong> {{ publication.pages }}{% endif %}
-                            </p>
-                            {% endif %}
-                            
-                            {% if publication.abstract %}
-                            <p class="card-text mt-3">{{ publication.abstract|truncatewords:40 }}</p>
-                            {% endif %}
-                            
-                            {% if publication.keywords %}
-                            <p class="mb-2">
-                                <i class="fas fa-tags"></i> <strong>Ключевые слова:</strong> 
-                                <small class="text-muted">{{ publication.keywords }}</small>
-                            </p>
-                            {% endif %}
-                            
-                            {% if publication.citation_count > 0 %}
-                            <p class="text-primary">
-                                <i class="fas fa-quote-right"></i> <strong>Цитирований:</strong> {{ publication.citation_count }}
-                            </p>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-2 text-center">
-                            <div class="publication-actions d-flex flex-column gap-2">
-                                <a href="{% url 'publication_detail' publication.pk %}" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-eye"></i> Детали
-                                </a>
-                                {% if publication.link %}
-                                <a href="{{ publication.link }}" class="btn btn-outline-secondary btn-sm" target="_blank">
-                                    <i class="fas fa-external-link-alt"></i> Ссылка
-                                </a>
-                                {% endif %}
-                                {% if publication.pdf_file %}
-                                <a href="{{ publication.pdf_file.url }}" class="btn btn-outline-danger btn-sm" target="_blank">
-                                    <i class="fas fa-file-pdf"></i> PDF
-                                </a>
-                                {% endif %}
-                                {% if publication.doi %}
-                                <a href="https://doi.org/{{ publication.doi }}" class="btn btn-outline-info btn-sm" target="_blank">
-                                    <i class="fas fa-link"></i> DOI
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+    {% if page_obj %}
+    <!-- Column header row -->
+    <div class="mono" style="font-size:10px; letter-spacing:.18em; color:var(--ink-faded); padding-bottom:8px; border-bottom:1px solid var(--ink); display:grid; grid-template-columns: 60px 1fr 140px 90px; gap:14px;">
+        <span>ГОД</span><span>НАЗВАНИЕ · АВТОРЫ · ЖУРНАЛ</span><span>ТИП</span><span>ЦИТ.</span>
+    </div>
+
+    <div>
+        {% for pub in page_obj %}
+        <div style="display:grid; grid-template-columns: 60px 1fr 140px 90px; gap:14px; padding:16px 0; border-bottom:1px dashed var(--rule); align-items:start;">
+            <div class="mono" style="color:var(--ink-faded); font-size:13px;">{{ pub.year }}</div>
+            <div style="font-size:15px; line-height:1.55;">
+                <b><a href="{% url 'publication_detail' pub.pk %}" style="text-decoration:none;">{{ pub.title }}</a></b><br/>
+                <span class="soft" style="font-size:14px;">{{ pub.authors|truncatewords:8 }}</span>
+                {% if pub.journal %}· <em>{{ pub.journal }}</em>{% endif %}
+                {% if pub.volume %}, {{ pub.volume }}{% endif %}
+                {% if pub.pages %}, {{ pub.pages }}{% endif %}
+                {% if pub.keywords %}
+                <div class="mono" style="font-size:10px; color:var(--ink-faded); letter-spacing:.08em; margin-top:6px;">{{ pub.keywords }}</div>
+                {% endif %}
+                <div class="flex flex-wrap gap-2" style="margin-top:8px;">
+                    {% if pub.pdf_file %}<a href="{{ pub.pdf_file.url }}" target="_blank" class="chip faded">PDF</a>{% endif %}
+                    {% if pub.doi %}<a href="https://doi.org/{{ pub.doi }}" target="_blank" class="chip faded">DOI</a>{% endif %}
+                    {% if pub.link %}<a href="{{ pub.link }}" target="_blank" class="chip faded">Ссылка</a>{% endif %}
+                    <a href="{% url 'publication_detail' pub.pk %}" class="chip">Детали →</a>
                 </div>
             </div>
-            {% endfor %}
+            <div class="mono" style="font-size:11px; color:var(--ink-soft); letter-spacing:.06em;">{{ pub.get_publication_type_display }}</div>
+            <div class="mono" style="font-size:13px; color:{% if pub.citation_count %}var(--accent){% else %}var(--ink-faded){% endif %};">{{ pub.citation_count|default:"—" }}</div>
         </div>
+        {% endfor %}
+    </div>
 
-        <!-- Pagination -->
-        {% if page_obj.has_other_pages %}
-        <nav aria-label="Pagination">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&type={{ current_type }}&year={{ current_year }}&search={{ search_query }}">
-                        <i class="fas fa-chevron-left"></i>
-                    </a>
-                </li>
-                {% endif %}
-                
-                {% for num in page_obj.paginator.page_range %}
-                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}&type={{ current_type }}&year={{ current_year }}&search={{ search_query }}">{{ num }}</a>
-                </li>
-                {% endfor %}
-                
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&type={{ current_type }}&year={{ current_year }}&search={{ search_query }}">
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
+    {% if page_obj.has_other_pages %}
+    <div class="pager">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&type={{ current_type|default:'' }}&year={{ current_year|default:'' }}&search={{ search_query|default:'' }}">← Пред.</a>
         {% endif %}
-        {% else %}
-        <div class="alert alert-info text-center">
-            <i class="fas fa-info-circle fa-3x mb-3"></i>
-            <h4>Публикации не найдены</h4>
-            <p>Попробуйте изменить параметры поиска</p>
-        </div>
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="current">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}&type={{ current_type|default:'' }}&year={{ current_year|default:'' }}&search={{ search_query|default:'' }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&type={{ current_type|default:'' }}&year={{ current_year|default:'' }}&search={{ search_query|default:'' }}">След. →</a>
         {% endif %}
     </div>
-</section>
-{% endblock %}
+    {% endif %}
 
+    {% else %}
+    <div class="paper-card center">
+        <div class="smallcaps" style="color:var(--ink-faded);">Публикации не найдены</div>
+        <p class="mt-2 soft">Попробуйте изменить параметры поиска.</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

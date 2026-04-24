@@ -5,36 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-    <title>{% block title %}Ахмедова Феруза Медетовна - Социолог{% endblock %}</title>
-    
+
+    <title>{% block title %}Ахмедова Феруза Медетовна — Социолог{% endblock %}</title>
+
     <meta name="description" content="{% block meta_description %}Профессиональный социолог Ахмедова Феруза Медетовна. Научные исследования, публикации, социологические услуги.{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}социолог, социология, исследования, Ахмедова Феруза, научные публикации{% endblock %}">
     <meta name="author" content="Ахмедова Феруза Медетовна">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="{% block og_title %}Ахмедова Феруза Медетовна - Социолог{% endblock %}">
+
+    <meta property="og:title" content="{% block og_title %}Ахмедова Феруза Медетовна — Социолог{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Профессиональный социолог. Научные исследования и публикации.{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    
-    <!-- Favicon -->
+
     <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -42,249 +35,157 @@
             for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
             k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
         })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104638490', 'ym');
-    
+
         ym(104638490, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/104638490" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- Google tag (gtag.js) -->
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NCC2849WNK"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-NCC2849WNK');
     </script>
-    
+
     {% block extra_css %}{% endblock %}
 </head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'index' %}">
-                <i class="fas fa-user-graduate text-primary"></i>
-                Ахмедова Ф.М.
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'index' %}">Главная</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">О социологе</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'services' %}active{% endif %}" href="{% url 'services' %}">Услуги</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'portfolio' %}active{% endif %}" href="{% url 'portfolio' %}">Портфолио</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'publications' %}active{% endif %}" href="{% url 'publications' %}">Публикации</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'books' or request.resolver_match.url_name == 'book_detail' %}active{% endif %}" href="{% url 'books' %}">Книги</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'blog' %}active{% endif %}" href="{% url 'blog' %}">Блог</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Контакты</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-primary btn-sm ms-2" href="{% url 'order_service' %}">
-                            <i class="fas fa-paper-plane"></i> Заказать услугу
-                        </a>
-                    </li>
-                </ul>
+<body data-theme="light">
+
+    <!-- Masthead -->
+    <header>
+        <div class="masthead">
+            <div class="kicker">EST. 2003 · Toshkent · {% now "Y" %} · Sotsiologiya · Tadqiqot · Ta’lim</div>
+            <a href="{% url 'index' %}" class="title">The Axmedova <em>Review</em></a>
+            <div class="subtitle">
+                {% if profile %}{{ profile.academic_degree|default:"Доктор социологических наук" }}{% else %}Доктор социологических наук{% endif %}
+                &nbsp;·&nbsp; Feruza M. Axmedova
             </div>
         </div>
-    </nav>
 
-    <!-- Messages -->
+        <button class="nav-toggle" id="navToggle" aria-label="Меню" style="display:block; margin:10px auto;">☰ Меню</button>
+
+        <nav class="topnav" id="topnav">
+            <a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}">Главная</a>
+            <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">О социологе</a>
+            <a href="{% url 'services' %}" class="{% if request.resolver_match.url_name == 'services' %}active{% endif %}">Услуги</a>
+            <a href="{% url 'portfolio' %}" class="{% if request.resolver_match.url_name == 'portfolio' %}active{% endif %}">Портфолио</a>
+            <a href="{% url 'books' %}" class="{% if request.resolver_match.url_name == 'books' or request.resolver_match.url_name == 'book_detail' %}active{% endif %}">Книги</a>
+            <a href="{% url 'blog' %}" class="{% if request.resolver_match.url_name == 'blog' or request.resolver_match.url_name == 'blog_detail' %}active{% endif %}">Блог</a>
+            <a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Контакты</a>
+        </nav>
+    </header>
+
     {% if messages %}
-    <div class="container mt-3">
+    <div class="toast-stack">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
             {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
         {% endfor %}
     </div>
     {% endif %}
 
-    <!-- Main Content -->
     <main>
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-5 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <h5 class="mb-3 text-primary">
-                        <i class="fas fa-user-graduate me-2"></i>Ахмедова Феруза Медетовна
-                    </h5>
-                    <p class="text-light mb-3">
-                        Доктор социологических наук, профессиональный социолог с более чем 20-летним опытом научной и практической деятельности.
-                    </p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-primary">Социология образования</span>
-                        <span class="badge bg-secondary">Методы исследований</span>
-                        <span class="badge bg-success">Социальная структура</span>
-                    </div>
-                </div>
-                
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h6 class="mb-3 text-primary">
-                        <i class="fas fa-sitemap me-2"></i>Разделы сайта
-                    </h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="{% url 'about' %}" class="text-light text-decoration-none">
-                            <i class="fas fa-chevron-right me-1"></i>О социологе</a></li>
-                        <li class="mb-2"><a href="{% url 'services' %}" class="text-light text-decoration-none">
-                            <i class="fas fa-chevron-right me-1"></i>Услуги</a></li>
-                        <li class="mb-2"><a href="{% url 'portfolio' %}" class="text-light text-decoration-none">
-                            <i class="fas fa-chevron-right me-1"></i>Портфолио</a></li>
-                        <li class="mb-2"><a href="{% url 'publications' %}" class="text-light text-decoration-none">
-                            <i class="fas fa-chevron-right me-1"></i>Публикации</a></li>
-                        <li class="mb-2"><a href="{% url 'books' %}" class="text-light text-decoration-none">
-                            <i class="fas fa-chevron-right me-1"></i>Книги</a></li>
-                        <li class="mb-2"><a href="{% url 'blog' %}" class="text-light text-decoration-none">
-                            <i class="fas fa-chevron-right me-1"></i>Блог</a></li>
-                        <li class="mb-2"><a href="{% url 'contact' %}" class="text-light text-decoration-none">
-                            <i class="fas fa-chevron-right me-1"></i>Контакты</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h6 class="mb-3 text-primary">
-                        <i class="fas fa-book me-2"></i>Услуги
-                    </h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            <span class="text-light">Социологические исследования</span>
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            <span class="text-light">Консультации по методологии</span>
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            <span class="text-light">Научное редактирование</span>
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            <span class="text-light">Подготовка публикаций</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h6 class="mb-3 text-primary">
-                        <i class="fas fa-phone me-2"></i>Связаться со мной
-                    </h6>
+    <footer class="site-foot">
+        <div class="inner">
+            <div>
+                <h5>Ахмедова Феруза Медетовна</h5>
+                <p class="soft" style="margin:0 0 14px; line-height:1.6;">
                     {% if profile %}
-                    <div class="mb-3">
-                        <p class="text-light mb-2">
-                            <i class="fas fa-envelope text-primary me-2"></i>
-                            <a href="mailto:{{ profile.email }}" class="text-light text-decoration-none">{{ profile.email }}</a>
-                        </p>
-                        <p class="text-light mb-3">
-                            <i class="fas fa-phone text-primary me-2"></i>
-                            <a href="tel:{{ profile.phone }}" class="text-light text-decoration-none">{{ profile.phone }}</a>
-                        </p>
-                    </div>
+                        {{ profile.bio|truncatewords:28 }}
                     {% else %}
-                    <div class="mb-3">
-                        <p class="text-light mb-2">
-                            <i class="fas fa-envelope text-primary me-2"></i>
-                            <span class="text-muted">Email будет добавлен</span>
-                        </p>
-                        <p class="text-light mb-3">
-                            <i class="fas fa-phone text-primary me-2"></i>
-                            <span class="text-muted">Телефон будет добавлен</span>
-                        </p>
-                    </div>
+                        Доктор социологических наук, профессиональный социолог с более чем 20-летним опытом научной и практической деятельности.
                     {% endif %}
-                    
-                    <div class="social-links">
-                        <h6 class="text-primary mb-2">
-                            <i class="fas fa-share-alt me-2"></i>Социальные сети
-                        </h6>
-                        {% if profile %}
-                            {% if profile.linkedin %}
-                            <a href="{{ profile.linkedin }}" class="text-white me-2" target="_blank" title="LinkedIn">
-                                <i class="fab fa-linkedin fa-lg"></i>
-                            </a>
-                            {% endif %}
-                            {% if profile.facebook %}
-                            <a href="{{ profile.facebook }}" class="text-white me-2" target="_blank" title="Facebook">
-                                <i class="fab fa-facebook fa-lg"></i>
-                            </a>
-                            {% endif %}
-                            {% if profile.researchgate %}
-                            <a href="{{ profile.researchgate }}" class="text-white me-2" target="_blank" title="ResearchGate">
-                                <i class="fab fa-researchgate fa-lg"></i>
-                            </a>
-                            {% endif %}
-                        {% else %}
-                        <span class="text-muted small">Социальные сети будут добавлены</span>
-                        {% endif %}
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="chip faded">Sotsiologiya</span>
+                    <span class="chip faded">Ta’lim</span>
+                    <span class="chip faded">Oila</span>
+                </div>
+            </div>
+
+            <div>
+                <h5>Навигация</h5>
+                <ul>
+                    <li><a href="{% url 'about' %}">О социологе</a></li>
+                    <li><a href="{% url 'services' %}">Услуги</a></li>
+                    <li><a href="{% url 'portfolio' %}">Портфолио</a></li>
+                    <li><a href="{% url 'books' %}">Книги</a></li>
+                    <li><a href="{% url 'blog' %}">Блог</a></li>
+                    <li><a href="{% url 'contact' %}">Контакты</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h5>Услуги</h5>
+                <ul>
+                    <li>Социологические исследования</li>
+                    <li>Консультации по методологии</li>
+                    <li>Научное редактирование</li>
+                    <li>Подготовка публикаций</li>
+                </ul>
+            </div>
+
+            <div>
+                <h5>Связаться</h5>
+                {% if profile %}
+                    <ul>
+                        <li><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>
+                        <li><a href="tel:{{ profile.phone }}">{{ profile.phone }}</a></li>
+                        {% if profile.address %}<li class="soft">{{ profile.address }}</li>{% endif %}
+                    </ul>
+                    <div class="social mt-3">
+                        {% if profile.linkedin %}<a href="{{ profile.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
+                        {% if profile.facebook %}<a href="{{ profile.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
+                        {% if profile.researchgate %}<a href="{{ profile.researchgate }}" target="_blank" rel="noopener">ResearchGate</a>{% endif %}
                     </div>
-                </div>
+                {% else %}
+                    <p class="muted">Email: будет добавлен</p>
+                    <p class="muted">Телефон: будет добавлен</p>
+                {% endif %}
             </div>
-            
-            <hr class="bg-secondary my-4">
-            
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <p class="mb-0 text-muted">
-                        <i class="fas fa-copyright me-1"></i>
-                        {% now "Y" %} Ахмедова Феруза Медетовна. Все права защищены.
-                        <span class="ms-3">
-                            <i class="fas fa-graduation-cap me-1"></i>Доктор социологических наук
-                        </span>
-                    </p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <p class="mb-0 text-muted small">
-                        <i class="fas fa-code me-1"></i>Сайт разработан в компании
-                        <span class="ms-2">
-                            <i class="fas fa-heart text-danger me-1"></i>Tuyin
-                        </span>
-                    </p>
-                </div>
-            </div>
-            
-            <div class="row mt-3">
-                <div class="col-12 text-center">
-                    <p class="mb-0 text-muted small">
-                        Powered by <a href="https://csog.uz" target="_blank" class="text-primary text-decoration-none">CSOG.uz</a>
-                    </p>
-                </div>
-            </div>
+        </div>
+
+        <div class="bot">
+            <div>© {% now "Y" %} Ахмедова Феруза Медетовна. Все права защищены.</div>
+            <div>Разработано в <b style="color:var(--ink-soft)">Tuyin</b> · <a href="https://csog.uz" target="_blank" rel="noopener">CSOG.uz</a></div>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <button id="backToTop" class="btn btn-primary" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+    <button id="backToTop" title="Наверх">↑</button>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom JS -->
-    <script src="{% static 'js/scripts.js' %}"></script>
-    
+    <script>
+    (function(){
+        var toggle = document.getElementById('navToggle');
+        var nav = document.getElementById('topnav');
+        if (toggle && nav){
+            toggle.addEventListener('click', function(){ nav.classList.toggle('open'); });
+        }
+        var btn = document.getElementById('backToTop');
+        if (btn){
+            window.addEventListener('scroll', function(){
+                btn.style.display = window.scrollY > 400 ? 'block' : 'none';
+            });
+            btn.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+        }
+        // hide toggle on desktop (CSS handles this, but belt & braces)
+        function sync(){
+            if (window.innerWidth > 780){
+                if (toggle) toggle.style.display = 'none';
+                if (nav) nav.classList.remove('open');
+            } else {
+                if (toggle) toggle.style.display = 'inline-block';
+            }
+        }
+        sync();
+        window.addEventListener('resize', sync);
+    })();
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
-

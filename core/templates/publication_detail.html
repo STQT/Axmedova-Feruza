@@ -2,149 +2,122 @@
 {% load static %}
 {% load custom_filters %}
 
-{% block title %}{{ publication.title }} - Публикации{% endblock %}
+{% block title %}{{ publication.title }} — Публикации{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header bg-light py-5">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'publications' %}">Публикации</a></li>
-                <li class="breadcrumb-item active">{{ publication.title|truncatewords:5 }}</li>
-            </ol>
-        </nav>
-    </div>
-</section>
+<div class="sheet">
 
-<!-- Publication Detail Section -->
-<section class="publication-detail-section py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-9">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <span class="badge bg-info">{{ publication.get_publication_type_display }}</span>
-                            {% if publication.is_featured %}
-                            <span class="badge bg-warning"><i class="fas fa-star"></i> Избранное</span>
-                            {% endif %}
-                        </div>
-                        
-                        <h1 class="display-6 fw-bold mb-4">{{ publication.title }}</h1>
-                        
-                        <div class="publication-meta mb-4">
-                            <p class="mb-2">
-                                <i class="fas fa-users text-primary"></i>
-                                <strong>Авторы:</strong> {{ publication.authors }}
-                            </p>
-                            <p class="mb-2">
-                                <i class="fas fa-calendar text-primary"></i>
-                                <strong>Год публикации:</strong> {{ publication.year }}
-                            </p>
-                            {% if publication.journal %}
-                            <p class="mb-2">
-                                <i class="fas fa-book text-primary"></i>
-                                <strong>Журнал:</strong> {{ publication.journal }}
-                            </p>
-                            {% endif %}
-                            {% if publication.publisher %}
-                            <p class="mb-2">
-                                <i class="fas fa-building text-primary"></i>
-                                <strong>Издатель:</strong> {{ publication.publisher }}
-                            </p>
-                            {% endif %}
-                            {% if publication.volume %}
-                            <p class="mb-2">
-                                <strong>Том:</strong> {{ publication.volume }}
-                            </p>
-                            {% endif %}
-                            {% if publication.pages %}
-                            <p class="mb-2">
-                                <strong>Страницы:</strong> {{ publication.pages }}
-                            </p>
-                            {% endif %}
-                            {% if publication.isbn %}
-                            <p class="mb-2">
-                                <strong>ISBN:</strong> {{ publication.isbn }}
-                            </p>
-                            {% endif %}
-                            {% if publication.citation_count > 0 %}
-                            <p class="mb-2">
-                                <i class="fas fa-quote-right text-primary"></i>
-                                <strong>Цитирований:</strong> {{ publication.citation_count }}
-                            </p>
-                            {% endif %}
-                        </div>
-                        
-                        {% if publication.abstract %}
-                        <hr>
-                        <h4 class="fw-bold mb-3">Аннотация</h4>
-                        <p class="lead">{{ publication.abstract|linebreaks }}</p>
-                        {% endif %}
-                        
-                        {% if publication.keywords %}
-                        <hr>
-                        <h5 class="fw-bold mb-3">Ключевые слова</h5>
-                        <p>
-                            {% for keyword in publication.keywords|split_tags %}
-                            <span class="badge bg-secondary me-1 mb-1">{{ keyword }}</span>
-                            {% endfor %}
-                        </p>
-                        {% endif %}
-                    </div>
+    <div class="crumbs">
+        <a href="{% url 'index' %}">Главная</a><span>·</span>
+        <a href="{% url 'publications' %}">Публикации</a><span>·</span>
+        {{ publication.title|truncatewords:5 }}
+    </div>
+
+    <div class="grid-12" style="margin-top:20px;">
+        <div class="col-span-8">
+            <div class="flex flex-wrap gap-2" style="margin-bottom:12px;">
+                <span class="chip">{{ publication.get_publication_type_display }}</span>
+                {% if publication.is_featured %}<span class="chip red">★ Избранное</span>{% endif %}
+                {% if publication.citation_count %}<span class="chip faded">{{ publication.citation_count }} цитирований</span>{% endif %}
+            </div>
+
+            <h1 class="display" style="font-size:clamp(28px, 4vw, 48px); font-weight:700; line-height:1.1; letter-spacing:-.01em; margin:0 0 16px;">{{ publication.title }}</h1>
+
+            <div class="mono" style="font-size:11px; color:var(--ink-faded); letter-spacing:.12em; text-transform:uppercase; padding-bottom:16px; border-bottom:1px solid var(--rule); margin-bottom:24px;">
+                {{ publication.authors }} · {{ publication.year }}
+                {% if publication.journal %} · {{ publication.journal }}{% endif %}
+                {% if publication.volume %} · Vol. {{ publication.volume }}{% endif %}
+                {% if publication.pages %} · P. {{ publication.pages }}{% endif %}
+            </div>
+
+            <div style="display:grid; grid-template-columns: 140px 1fr; gap:10px 18px; font-size:15px; line-height:1.6; margin-bottom:28px;">
+                <div class="mono" style="color:var(--ink-faded); font-size:11px; letter-spacing:.12em;">АВТОРЫ</div>
+                <div>{{ publication.authors }}</div>
+
+                <div class="mono" style="color:var(--ink-faded); font-size:11px; letter-spacing:.12em;">ГОД</div>
+                <div>{{ publication.year }}</div>
+
+                {% if publication.journal %}
+                <div class="mono" style="color:var(--ink-faded); font-size:11px; letter-spacing:.12em;">ЖУРНАЛ</div>
+                <div><em>{{ publication.journal }}</em></div>
+                {% endif %}
+
+                {% if publication.publisher %}
+                <div class="mono" style="color:var(--ink-faded); font-size:11px; letter-spacing:.12em;">ИЗДАТЕЛЬ</div>
+                <div>{{ publication.publisher }}</div>
+                {% endif %}
+
+                {% if publication.volume %}
+                <div class="mono" style="color:var(--ink-faded); font-size:11px; letter-spacing:.12em;">ТОМ</div>
+                <div>{{ publication.volume }}</div>
+                {% endif %}
+
+                {% if publication.pages %}
+                <div class="mono" style="color:var(--ink-faded); font-size:11px; letter-spacing:.12em;">СТРАНИЦЫ</div>
+                <div>{{ publication.pages }}</div>
+                {% endif %}
+
+                {% if publication.isbn %}
+                <div class="mono" style="color:var(--ink-faded); font-size:11px; letter-spacing:.12em;">ISBN</div>
+                <div class="mono">{{ publication.isbn }}</div>
+                {% endif %}
+
+                {% if publication.doi %}
+                <div class="mono" style="color:var(--ink-faded); font-size:11px; letter-spacing:.12em;">DOI</div>
+                <div class="mono"><a href="https://doi.org/{{ publication.doi }}" target="_blank" rel="noopener">{{ publication.doi }}</a></div>
+                {% endif %}
+            </div>
+
+            {% if publication.abstract %}
+            <hr class="rule-h dbl" style="margin:24px 0 20px;" />
+            <div class="smallcaps" style="color:var(--accent);">Аннотация</div>
+            <div class="rich-content">
+                <p><span class="drop">{{ publication.abstract|first }}</span>{{ publication.abstract|slice:"1:"|linebreaks }}</p>
+            </div>
+            {% endif %}
+
+            {% if publication.keywords %}
+            <hr class="rule-h thin" style="margin:28px 0 16px;" />
+            <div class="flex flex-wrap gap-2 items-center">
+                <span class="smallcaps" style="color:var(--ink-faded); margin-right:8px;">Ключевые слова:</span>
+                {% for keyword in publication.keywords|split_tags %}
+                    <span class="chip faded">{{ keyword }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-span-4">
+            <div class="paper-card shadow">
+                <div class="smallcaps" style="color:var(--accent);">Доступ</div>
+                <hr class="rule-h" style="margin:8px 0 14px;" />
+                <div class="flex gap-2" style="flex-direction:column;">
+                    {% if publication.pdf_file %}
+                        <a href="{{ publication.pdf_file.url }}" target="_blank" class="btn-edit solid" style="text-align:center;">Скачать PDF</a>
+                    {% endif %}
+                    {% if publication.doi %}
+                        <a href="https://doi.org/{{ publication.doi }}" target="_blank" class="btn-edit" style="text-align:center;">DOI →</a>
+                    {% endif %}
+                    {% if publication.link %}
+                        <a href="{{ publication.link }}" target="_blank" class="btn-edit" style="text-align:center;">Внешняя ссылка</a>
+                    {% endif %}
                 </div>
             </div>
-            
-            <div class="col-lg-3">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold mb-3">Доступ к публикации</h5>
-                        <div class="d-grid gap-2">
-                            {% if publication.pdf_file %}
-                            <a href="{{ publication.pdf_file.url }}" class="btn btn-danger" target="_blank">
-                                <i class="fas fa-file-pdf"></i> Скачать PDF
-                            </a>
-                            {% endif %}
-                            {% if publication.doi %}
-                            <a href="https://doi.org/{{ publication.doi }}" class="btn btn-info" target="_blank">
-                                <i class="fas fa-link"></i> Перейти к DOI
-                            </a>
-                            {% endif %}
-                            {% if publication.link %}
-                            <a href="{{ publication.link }}" class="btn btn-secondary" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> Внешняя ссылка
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold mb-3">Цитирование</h5>
-                        <p class="small text-muted">
-                            {{ publication.authors }}. ({{ publication.year }}). {{ publication.title }}.
-                            {% if publication.journal %}{{ publication.journal }}.{% endif %}
-                            {% if publication.volume %}{{ publication.volume }}.{% endif %}
-                            {% if publication.pages %}{{ publication.pages }}.{% endif %}
-                            {% if publication.doi %}https://doi.org/{{ publication.doi }}{% endif %}
-                        </p>
-                    </div>
-                </div>
+
+            <div class="paper-card" style="margin-top:20px;">
+                <div class="smallcaps" style="color:var(--accent);">Цитирование</div>
+                <hr class="rule-h" style="margin:8px 0 14px;" />
+                <p class="serif" style="font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin:0;">
+                    {{ publication.authors }} ({{ publication.year }}). {{ publication.title }}.
+                    {% if publication.journal %}<em>{{ publication.journal }}</em>{% if publication.volume %}, {{ publication.volume }}{% endif %}{% if publication.pages %}, {{ publication.pages }}{% endif %}.{% endif %}
+                    {% if publication.doi %}https://doi.org/{{ publication.doi }}{% endif %}
+                </p>
             </div>
         </div>
     </div>
-</section>
 
-<!-- Back to Publications -->
-<section class="py-3 bg-light">
-    <div class="container">
-        <a href="{% url 'publications' %}" class="btn btn-outline-primary">
-            <i class="fas fa-arrow-left"></i> Вернуться к публикациям
-        </a>
-    </div>
-</section>
+    <hr class="rule-h dbl" style="margin:40px 0 20px;" />
+    <a href="{% url 'publications' %}" class="chip">← Вернуться к публикациям</a>
+
+</div>
 {% endblock %}
-

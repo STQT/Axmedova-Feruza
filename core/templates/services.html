@@ -2,129 +2,104 @@
 {% load static %}
 {% load custom_filters %}
 
-{% block title %}Услуги - Ахмедова Феруза Медетовна{% endblock %}
+{% block title %}Услуги — Ахмедова Феруза Медетовна{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header bg-light py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="display-4 fw-bold">Услуги социолога</h1>
-                <p class="lead text-muted">Профессиональные социологические услуги для вашего бизнеса и исследований</p>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center">
-                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
-                        <li class="breadcrumb-item active">Услуги</li>
-                    </ol>
-                </nav>
-            </div>
+<div class="sheet">
+
+    <div class="crumbs">
+        <a href="{% url 'index' %}">Главная</a><span>·</span>Услуги
+    </div>
+
+    <div class="page-head">
+        <div>
+            <div class="smallcaps" style="color:var(--accent);">Catalog of services</div>
+            <h1>Услуги социолога</h1>
+        </div>
+        <div class="meta">
+            {% if services %}<div><b>Всего позиций:</b> {{ services|length }}</div>{% endif %}
+            <div><b>Языки:</b> UZ · RU · EN</div>
         </div>
     </div>
-</section>
 
-<!-- Services Section -->
-<section class="services-section py-5">
-    <div class="container">
-        {% if services %}
-        <div class="row g-4">
-            {% for service in services %}
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 shadow-sm hover-card">
-                    <div class="card-body text-center">
-                        <div class="service-icon mb-4">
-                            <i class="{{ service.icon }} fa-4x text-primary"></i>
-                        </div>
-                        <h4 class="card-title fw-bold mb-3">{{ service.title }}</h4>
-                        <p class="card-text text-muted mb-4">{{ service.description }}</p>
-                        
-                        {% if service.duration %}
-                        <p class="mb-2">
-                            <i class="fas fa-clock text-primary"></i>
-                            <strong>Длительность:</strong> {{ service.duration }}
-                        </p>
-                        {% endif %}
-                        
-                        {% if service.price_from %}
-                        <div class="price mb-4">
-                            <h3 class="text-primary mb-0">От {{ service.price_from|format_price }}</h3>
-                        </div>
-                        {% endif %}
-                        
-                        <a href="{% url 'order_service_direct' service.id %}" class="btn btn-primary btn-lg w-100">
-                            <i class="fas fa-paper-plane"></i> Заказать услугу
-                        </a>
-                    </div>
+    <p class="serif" style="font-size:17px; line-height:1.7; color:var(--ink-soft); max-width:720px; margin:0 0 32px;">
+        Профессиональные социологические услуги для вашего бизнеса и научных исследований — от методологии до полевых работ, публикаций и консультирования.
+    </p>
+
+    {% if services %}
+    <div class="grid-12">
+        {% for service in services %}
+        <div class="col-span-4">
+            <div class="service-card">
+                <div class="num">{{ forloop.counter|stringformat:"02d" }} · {{ service.duration|default:"УСЛУГА"|upper }}</div>
+                <h3>{{ service.title }}</h3>
+                <p class="desc">{{ service.description }}</p>
+
+                {% if service.duration %}
+                <div class="mono" style="font-size:11px; color:var(--ink-faded); letter-spacing:.1em;">
+                    Длительность: <b style="color:var(--ink-soft)">{{ service.duration }}</b>
+                </div>
+                {% endif %}
+
+                <div class="foot">
+                    {% if service.price_from %}
+                        <span class="price">от {{ service.price_from|format_price }}</span>
+                    {% else %}
+                        <span class="price" style="color:var(--ink-soft); font-size:14px;">Договорная</span>
+                    {% endif %}
+                    <a href="{% url 'order_service_direct' service.id %}" class="chip solid">Заказать →</a>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        {% else %}
-        <div class="alert alert-info text-center">
-            <i class="fas fa-info-circle fa-3x mb-3"></i>
-            <h4>Информация об услугах скоро появится</h4>
-        </div>
-        {% endif %}
+        {% endfor %}
     </div>
-</section>
-
-<!-- Why Choose Section -->
-<section class="why-choose-section py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Почему выбирают меня</h2>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-3 text-center">
-                <div class="feature-box p-4">
-                    <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Экспертиза</h5>
-                    <p class="text-muted">Научная степень и многолетний опыт</p>
-                </div>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-box p-4">
-                    <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Результативность</h5>
-                    <p class="text-muted">Доказанные результаты исследований</p>
-                </div>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-box p-4">
-                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Индивидуальный подход</h5>
-                    <p class="text-muted">Решения под ваши задачи</p>
-                </div>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="feature-box p-4">
-                    <i class="fas fa-clock fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Соблюдение сроков</h5>
-                    <p class="text-muted">Работа выполняется вовремя</p>
-                </div>
-            </div>
-        </div>
+    {% else %}
+    <div class="paper-card center">
+        <div class="smallcaps" style="color:var(--ink-faded);">Нет доступных услуг</div>
+        <p class="mt-2 soft">Информация об услугах скоро появится.</p>
     </div>
-</section>
+    {% endif %}
 
-<!-- CTA Section -->
-<section class="cta-section py-5">
-    <div class="container">
-        <div class="card bg-primary text-white shadow-lg">
-            <div class="card-body text-center py-5">
-                <h2 class="fw-bold mb-3">Готовы начать проект?</h2>
-                <p class="lead mb-4">Свяжитесь со мной для получения консультации и обсуждения деталей</p>
-                <div class="d-flex gap-3 justify-content-center">
-                    <a href="{% url 'order_service' %}" class="btn btn-light btn-lg">
-                        <i class="fas fa-paper-plane"></i> Заказать услугу
-                    </a>
-                    <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">
-                        <i class="fas fa-envelope"></i> Написать
-                    </a>
-                </div>
+    <!-- WHY -->
+    <section class="band">
+        <hr class="rule-h dbl" style="margin-bottom:28px;">
+        <div class="section-head">
+            <h2>Почему выбирают меня</h2>
+            <span class="meta">4 принципа работы</span>
+        </div>
+
+        <div class="grid-12">
+            <div class="col-span-3">
+                <div class="mono" style="font-size:10px; letter-spacing:.22em; color:var(--accent);">01</div>
+                <h3 class="display" style="font-size:22px; margin:6px 0 6px;">Экспертиза</h3>
+                <p class="soft" style="font-size:14.5px; line-height:1.55;">Научная степень и многолетний опыт в социологии.</p>
+            </div>
+            <div class="col-span-3">
+                <div class="mono" style="font-size:10px; letter-spacing:.22em; color:var(--accent);">02</div>
+                <h3 class="display" style="font-size:22px; margin:6px 0 6px;">Результативность</h3>
+                <p class="soft" style="font-size:14.5px; line-height:1.55;">Доказанные результаты исследований, публикации.</p>
+            </div>
+            <div class="col-span-3">
+                <div class="mono" style="font-size:10px; letter-spacing:.22em; color:var(--accent);">03</div>
+                <h3 class="display" style="font-size:22px; margin:6px 0 6px;">Индивидуальный подход</h3>
+                <p class="soft" style="font-size:14.5px; line-height:1.55;">Решения именно под ваши задачи и контекст.</p>
+            </div>
+            <div class="col-span-3">
+                <div class="mono" style="font-size:10px; letter-spacing:.22em; color:var(--accent);">04</div>
+                <h3 class="display" style="font-size:22px; margin:6px 0 6px;">Соблюдение сроков</h3>
+                <p class="soft" style="font-size:14.5px; line-height:1.55;">Работа выполняется в обозначенный период.</p>
             </div>
         </div>
+    </section>
+
+</div>
+
+<section class="cta-band">
+    <h2>Готовы начать проект?</h2>
+    <p>Свяжитесь со мной для получения консультации и обсуждения деталей</p>
+    <div class="flex justify-center gap-3 flex-wrap">
+        <a href="{% url 'order_service' %}" class="btn-edit solid">Заказать услугу</a>
+        <a href="{% url 'contact' %}" class="btn-edit">Написать</a>
     </div>
 </section>
 {% endblock %}
-
